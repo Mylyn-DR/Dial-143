@@ -1,0 +1,217 @@
+NEW_INTERACTION
+SETTINGS[MORNING, EXT_BUILDING]
+
+
+NARRATOR(NULL): Your day started as normal. However, this day was one of the ones where you were much more upbeat than usual.
+
+
+SETTINGS[MORNING, EXT_BUILDING]
+
+
+NARRATOR(NULL): It was now time to start your very first job after graduation. It was not an easy one to get hold of, and the starting pay was enough to pay off bills and necessities.
+NARRATOR(NULL): You pat off any creases from your office wear, and finally took one last look at your company ID.
+
+
+SYSTEM(NULL): ID Creation.
+
+
+SETTINGS[MORNING, INT_BUILDING]
+
+
+NARRATOR(NULL): Finally, you began to enter the building with both pride and worry. Pride, as you know, you’re one of the many with a 9-8 job. Worry, as you may not find any coworkers to get along with.
+NARRATOR(NULL): You walked around confused, but then saw a man nearing his 20’s waiting nearby.
+
+
+???(NULL): Hello…? Are you the new person I’ll be handling?
+
+
+NEW_CHOICE
+
+
+CHOICE "Who are you?" (+3 ROSARIO)
+PLAYER(NULL): Sorry? Who are you?
+ROSARIO(NEUTRAL): I’m Rosario, your supervisor. I assume that your name is PC?
+
+
+CHOICE "The one and only" (+0 ROSARIO)
+PLAYER(NULL): I’m PC, the one and only.
+ROSARIO(NEUTRAL): Um, okay then… I’m Rosario, your supervisor and team leader. Nice to meet you.
+
+
+END_CHOICE
+
+
+ROSARIO(NEUTRAL): Since this is your first day, I’m assigned to help you work around here.
+
+
+SETTINGS[MORNING, INT_ELEVATOR]
+
+
+NARRATOR(NULL): As you walk together to the elevator, you curiously look up to Rosario.
+
+
+ROSARIO(NEUTRAL): Do you have any questions?
+
+
+NEW_CHOICE
+
+
+CHOICE "What’s my role?" (+0 ROSARIO)
+PLAYER(NULL): What exactly is my role here?
+ROSARIO(NEUTRAL): You’ll be working as an inbound agent. You’ll handle customer calls from inquiries to technical support.
+
+
+CHOICE "What’s the team like?" (+0 ROSARIO)
+PLAYER(NULL): So what’s the team like? Who will I be working with?
+ROSARIO(NEUTRAL): They’re nice and competent. The last newcomer we had was someone who got hired 2 months ago.
+
+
+END_CHOICE
+
+
+ROSARIO(NEUTRAL): We’re here. Welcome to Khai G. Call Center Agency, Mr./Ms. PC.
+
+
+SETTINGS[MORNING, INT_OFFICE]
+
+
+NARRATOR(NULL): You stepped into a massive room filled with cubicles. Keyboard clicks, phones ringing, and countless conversations filled your ears. You have no choice but to adapt to this environment.
+
+
+ROSARIO(NEUTRAL): Your cubicle is here. Please sit down, and I’ll guide you through the process.
+
+
+SYSTEM(NULL): Tutorial - Callshift Introduction.
+
+
+ROSARIO(NEUTRAL): Great job! I’m confident that everything will work out here.
+
+
+NEW_CHOICE
+
+
+CHOICE "It’s all thanks to you." (+5 ROSARIO)
+PLAYER(NULL): No, no, it’s all thanks to you.
+ROSARIO(NEUTRAL): No need to flatter me. You did all the hard work. I’m only here to guide you.
+
+
+CHOICE "I'm just that good." (+3 ROSARIO)
+PLAYER(NULL): It’s all because I’m just that good.
+ROSARIO(HAPPY): (laughs) Is that so? Then I have nothing to worry about.
+
+
+END_CHOICE
+
+
+ROSARIO(NEUTRAL): I’ll have to go now. I have to check on other new hires. You'll be fine on your own for the next few calls.
+
+
+PLAYER(NULL): Okay. I’ll see you around then.
+
+
+END_INTERACTION
+
+
+
+
+NEW_CALLSHIFT
+SETTINGS[AFTERNOON, INT_OFFICE]
+END_CALLSHIFT
+
+
+
+
+NEW_INTERACTION
+SETTINGS[EVENING, INT_OFFICE]
+
+
+PLAYER(NULL): Well, I’m exhausted. I never thought I’d handle that many calls.
+
+
+???(NULL): PC? Is that you?!
+
+
+NARRATOR(NULL): A familiar voice enters your ears. It must’ve been your childhood friend, Amaya.
+
+
+PLAYER(NULL): It can’t be? Amaya?
+
+
+AMAYA(HAPPY): PC! You got the job! Why didn’t you tell me!
+
+
+PLAYER(NULL): I just thought you’d be busy today. Also, I wanted it to be a surprise.
+
+
+AMAYA(HAPPY): I’m surprised, alright. Hey, since it’s your first day, I’ll buy you a gift. How about that?
+
+
+PLAYER(NULL): Free food? Deal!
+
+
+SETTINGS[EVENING, EXT_STORE]
+
+
+PLAYER(NULL): I didn’t know there was a store near our company.
+AMAYA(HAPPY): It’s one of the many perks of working around here.
+
+
+SETTINGS[EVENING, INT_STORE]
+
+
+AMAYA(HAPPY): Here, a coffee! Every office worker needs one!
+
+
+NEW_CHOICE
+
+
+CHOICE "Tease" (+3 AMAYA)
+PLAYER(NULL): You want me to die from a heart attack? You know I'm not a workaholic like you.
+AMAYA(ANNOYED): I try to be a nice person for once, and you return it to me like this! I’m hurt!
+
+
+CHOICE "Grateful" (+5 AMAYA)
+PLAYER(NULL): Thank you! I actually needed this.
+AMAYA(HAPPY): Whoa? You’re grateful for once. You’re always welcome.
+
+
+END_CHOICE
+
+
+AMAYA(NEUTRAL): I never thought I’d see you here again.
+
+
+PLAYER(NULL): Yeah, it feels like we’re back in high school.
+
+
+AMAYA(NEUTRAL): I miss the old times. Since it’s your first day, do you have any questions for me?
+
+
+NEW_CHOICE
+
+
+CHOICE "Who is Rosario?" (+8 ROSARIO)
+PLAYER(NULL): I’m curious about our team leader. Do you know anything about him?
+AMAYA(NEUTRAL): Oh, him? He’s actually very kind.
+AMAYA(NEUTRAL): But don’t tell anyone, I’m kind of scared of him.
+
+
+CHOICE "How long here?" (+8 AMAYA)
+PLAYER(NULL): How long have you worked here?
+AMAYA(NEUTRAL): I got the job 2 months ago.
+AMAYA(NEUTRAL): I’m just here for job experience before I pursue IT.
+
+
+END_CHOICE
+
+
+AMAYA(HAPPY): Anyways, I’m glad to see you again! Don’t forget to chat me!
+
+
+AMAYA(HAPPY): I’ll head home now. See you later, PC!
+
+
+PLAYER(NULL): Yeah, see you later, Amaya.
+
+
+END_INTERACTION
