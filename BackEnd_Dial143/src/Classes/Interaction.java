@@ -92,9 +92,9 @@ public class Interaction extends Event{
             switch(i){
                 case 1: 
                     System.out.println(
-                            dialogueLines.get(i).getSpeaker() + " ("  +
-                            dialogueLines.get(i).getExpression() + "): "  + 
-                            dialogueLines.get(i).getDialogue()
+                            dialogueLines.get(dialogueIndex).getSpeaker() + " ("  +
+                            dialogueLines.get(dialogueIndex).getExpression() + "): "  + 
+                            dialogueLines.get(dialogueIndex).getDialogue()
                             );
                     dialogueIndex++; 
                 break;
