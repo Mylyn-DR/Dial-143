@@ -1,0 +1,186 @@
+NEW_CALLER
+SARAH
+NEW_CALLSESSION
+EASY
+CONVERSATION_1
+Player: Welcome to Khai G. Call Center Agency! How may I assist you?
+Sarah: Hi, I'm at NAIA Terminal 3 and my flight to Cebu was just cancelled. Hay naku, I really need to get home to my kids, can you see what's available?
+
+OPTIONS_CONV_1
+OP_BEST_Show empathy and search for flights
+Player: I am so sorry for the hassle, Sarah. I understand how important it is to get back to your kids. Let me check the next available flight for you right now.
+Sarah: Salamat, I appreciate you moving so quickly on this.
+CONTINUE
+
+OP_GOOD_Tell her to wait for a system refresh
+Player: I can help you rebook, but I need you to wait while I refresh my system.
+Sarah: Uh... um okay. Please try to hurry, it's very crowded here.
+CONTINUE
+
+OP_BAD_Tell her to fall in line at the airport
+Player: You should just fall in line at the ticket booth there; they can help you faster than I can.
+Sarah: Sus! I’ve been in line for an hour already! Why did I even call you?
+
+OP_NOANSWER
+Sarah: Hello? Are you still there? I really need help here!
+
+CONVERSATION_2
+OPTIONS_CONV_2
+
+OP_BEST_Confirm the flight and wish her a safe trip
+Player: I've secured a 6:00 PM direct flight for you. Your boarding pass has been sent to your email. Safe travels!
+Sarah: You are a lifesaver, salamat kaayo!
+
+OP_GOOD_Book a flight but mention extra fees
+Player: I booked you on the next available flight, but you will need to pay additional taxes at the counter.
+Sarah: Uh... um okay. I thought it was free, but I guess I have no choice.
+
+OP_BAD_Put her on hold for too long
+Player: I need to put you on hold for fifteen minutes to confirm this with my supervisor.
+Sarah: Fifteen minutes?! Kaloka! The flight will be gone by then!
+
+OP_NOANSWER
+Sarah: Grabe naman. Is this company even real?
+
+END_CALLSESSION
+NEW_CALLSESSION
+MEDIUM
+
+CONVERSATION_1
+Player: Welcome to Khai G. Call Center Agency! How may I assist you?
+Sarah: It's Sarah again. I finally landed in Mactan, but my checked luggage is missing! My kids' pasalubong are in there!
+
+OPTIONS_CONV_1
+OP_BEST_Validate her stress and start a report
+Player: That sounds very stressful, especially after your delayed flight. Let’s file a Missing Baggage Report right now so we can track it.
+Sarah: Hala, please! I really need those bags, my kids are waiting.
+
+CONTINUE
+
+OP_GOOD_Ask her to list all items
+Player: I can help, but I need you to list all the items inside your luggage for documentation.
+Sarah: Uh... um okay. There’s chocolates, clothes... do I really need to list everything now?
+
+CONTINUE
+
+OP_BAD_Tell her to just wait
+Player: This is normal during peak season. Just wait for it to show up later.
+Sarah: Ano? The carousel has stopped! You're not helping at all!
+
+OP_NOANSWER
+Sarah: Hello?? Again? Why is no one answering me?!
+
+CONVERSATION_2
+OPTIONS_CONV
+
+OP_BEST_Offer home delivery for luggage
+Player: I’ve arranged for your luggage to be delivered directly to your home in Talisay once it arrives tonight.
+Sarah: Salamat! That’s such a relief. I can finally go home.
+
+OP_GOOD_Tell her to return tomorrow
+Player: You can come back tomorrow morning to check if your luggage has arrived.
+Sarah: Uh... um okay. I guess I’ll have to come back again.
+
+OP_BAD_Say nothing else can be done
+Player: There’s nothing else I can do since the Manila office is unavailable.
+Sarah: Grabe naman. You’re just leaving me hanging?
+
+OP_NOANSWER
+Sarah: This is so frustrating. I should’ve called another agency.
+
+END_CALLSESSION
+NEW_CALLSESSION
+HARD
+
+CONVERSATION_1
+Player: Welcome to Khai Call Center! How may I assist you?
+Sarah: I am so upset! The courier delivered my bag but the lock is broken and my laptop is gone! Nanalo na talaga ako sa malas! I want a refund!
+
+OPTIONS_CONV_1
+OP_BEST_Escalate as theft incident
+Player: Sarah, I’m truly sorry. This is a serious case. I will file a "Theft in Transit" report immediately for investigation.
+Sarah: You better! That laptop is for my work!
+
+CONTINUE
+
+OP_GOOD_Offer flight refund only
+Player: I’m really sorry, Sarah. I can process a refund for your flight ticket.
+Sarah: Uh... um okay. But the laptop costs way more than that...
+
+CONTINUE
+
+OP_BAD_Mention no liability policy
+Player: Our policy states we are not liable for electronics. You should have read the fine print.
+Sarah: Bastos! I’ll report this to DTI!
+
+OP_NOANSWER
+Sarah: Unbelievable. Is anyone even listening to me?!
+
+CONVERSATION_2
+OPTIONS_CONV_2
+
+OP_BEST_Provide compensation
+Player: Aside from the investigation, I’ve approved a ₱30,000 compensation to help replace your laptop.
+Sarah: Diyos ko, thank you. You really helped me through this.
+
+OP_GOOD_Offer travel voucher
+Player: I can offer a ₱5,000 travel voucher for your next flight.
+Sarah: Uh... um okay… but I don’t think I want to travel anytime soon.
+
+OP_BAD_Tell her to wait weeks
+Player: Please wait for the airline to contact you in a few weeks.
+Sarah: Walang kwenta. I should’ve talked to a manager!
+
+OP_NOANSWER
+Sarah: This is the worst service I’ve ever experienced!
+
+END_CALLSESSION
+END_CALLER
+
+NEW_CALLER 
+LEO
+NEW_CALLSESSION
+MEDIUM
+
+CONVERSATION_1
+Player: Welcome to Khai Call Center! How may I assist you?
+Leo: Hey, uh, I think my gaming account was hacked. I tried logging in to Pinoy Quest this morning and it says my password was changed. I’ve spent thousands of pesos on skins there!
+
+OPTIONS_CONV_1
+OP_BEST_Validate loss and verify ownership
+Player: That’s a nightmare, Leo. I understand how much effort you put into your account. Let’s verify your ownership right now so we can secure it.
+Leo: Thanks, man. I’m really stressed because I have a tournament later tonight.
+CONTINUE
+
+OP_GOOD_Ask for username and last login
+Player: I can help with that. Please provide your username and your last successful login.
+Leo: Uh... um okay. I think it was around 11:00 PM last night? I’m not 100% sure.
+CONTINUE
+
+OP_BAD_Tell him to use Forgot Password
+Player: Have you tried clicking "Forgot Password"? That’s faster than calling us.
+Leo: Luh! Obviously I tried that! The recovery email was changed too! Do your job!
+
+OP_NOANSWER
+Leo: Hello? Bro, don’t ghost me right now!
+
+CONVERSATION_2
+OPTIONS_CONV_2
+
+OP_BEST_Freeze account and verify identity
+Player: I’ve frozen your account to stop any trades, and your identity is verified. I’m sending a reset link to your original email now.
+Leo: Salamat! You’re a legend. I can still make it to my match!
+
+OP_GOOD_Reset password with item lock warning
+Player: I’ve reset your password, but your items will be locked from trading for 7 days for security.
+Leo: Uh... um okay. That’s fine, at least I got it back.
+
+OP_BAD_Delay response for 48 hours
+Player: I’ve forwarded this to tech support. Please wait 48 hours for an update.
+Leo: 48 hours? Sayang naman the event rewards! You guys are so slow.
+
+OP_NOANSWER
+Leo: Wow, nice support. Silent treatment?
+
+END_CALLSESSION
+END_CALLER

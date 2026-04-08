@@ -1,0 +1,364 @@
+NEW_INTERACTION
+SETTINGS[MORNING, INT_CALL_CENTER]
+
+
+NARRATOR(NULL): The next day, the usual buzz of the call center feels louder—more chaotic than usual.
+
+
+NARRATOR(NULL): You notice Amaya on a particularly difficult call.
+
+
+NARRATOR(NULL): Her "customer service voice" is perfect, but the moment she hangs up, her smile disappears.
+
+
+NARRATOR(NULL): For a moment, she just stares at her monitor, shoulders slumped.
+
+
+NARRATOR(NULL): Before you can approach her, a voice calls out.
+
+
+ROSARIO(NEUTRAL): PC, come here for a second.
+
+
+PLAYER(NULL): Yes, sir?
+
+
+ROSARIO(NEUTRAL): I want you to check these papers. Just double-check for any margin errors.
+
+
+NARRATOR(NULL): Before he can hand them over, Amaya suddenly steps in.
+
+
+AMAYA(NEUTRAL): I’ll do it!
+
+
+NARRATOR(NULL): She grabs the papers and quickly skims through them.
+
+
+NARRATOR(NULL): She pats them neatly after.
+
+
+AMAYA(HAPPY): I can finish this in a week—no, even less!
+
+
+AMAYA(HAPPY): You’ll raise my pay if I do, right?
+
+
+ROSARIO(NEUTRAL): Amaya… I wasn’t asking for volunteers.
+
+
+ROSARIO(NEUTRAL): And I’m definitely not asking you to take on more work.
+
+
+AMAYA(NEUTRAL): Oh, come on! I can do this!
+
+
+AMAYA(NEUTRAL): You know me—always looking for overtime!
+
+
+NARRATOR(NULL): Rosario glances at you.
+
+
+NARRATOR(NULL): There’s something in his expression… disappointment? Hurt?
+
+
+ROSARIO(NEUTRAL): Amaya, you’ve worked more than enough.
+
+
+ROSARIO(NEUTRAL): It’s time to rest.
+
+
+AMAYA(NEUTRAL): But! PC, you know I can do this, right?
+
+
+NEW_CHOICE
+
+
+CHOICE "Tell Amaya to rest" (-10 LP)
+
+
+PLAYER(NULL): Amaya, stop.
+
+
+AMAYA(NEUTRAL): (blinks) What?
+
+
+PLAYER(NULL): You need to rest. I mean it.
+
+
+AMAYA(NEUTRAL): I don’t need—
+
+
+PLAYER(NULL): I’ll handle the papers.
+
+
+PLAYER(NULL): Go take a break. Please.
+
+
+NARRATOR(NULL): Amaya stares at you.
+
+
+NARRATOR(NULL): Her mouth opens… then closes.
+
+
+AMAYA(NEUTRAL): …Fine.
+
+
+NARRATOR(NULL): She walks away.
+
+
+NARRATOR(NULL): But she glances back at you and Rosario.
+
+
+NARRATOR(NULL): Her jaw tightens.
+
+
+ROSARIO(SOFT): That was kind of you.
+
+
+PLAYER(NULL): Someone had to say it.
+
+
+ROSARIO(SOFT): …Yeah.
+
+
+NARRATOR(NULL): As you take the papers, his fingers brush yours.
+
+
+NARRATOR(NULL): He doesn’t pull away immediately.
+
+
+ROSARIO(SOFT): Let’s go over them together.
+
+
+ROSARIO(SOFT): In my office.
+
+
+CHOICE "Let Amaya do this" (+10 LP)
+
+
+PLAYER(NULL): She’s capable.
+
+
+PLAYER(NULL): If she wants to do it, let her.
+
+
+AMAYA(HAPPY): Thank you, PC!
+
+
+ROSARIO(NEUTRAL): …If you say so.
+
+
+NARRATOR(NULL): Amaya walks away, clearly pleased.
+
+
+NARRATOR(NULL): Rosario gently touches your arm.
+
+
+ROSARIO(NEUTRAL): You know she’s working sixty hours a week, right?
+
+
+PLAYER(NULL): She seems fine.
+
+
+ROSARIO(NEUTRAL): …Does she?
+
+
+NARRATOR(NULL): You look at Amaya.
+
+
+NARRATOR(NULL): She’s already back at her desk.
+
+
+NARRATOR(NULL): Head down. Shoulders tense.
+
+
+NARRATOR(NULL): Her earlier smile is gone.
+
+
+END_CHOICE
+END_INTERACTION
+
+NEW_CALLSHIFT
+SETTINGS[AFTERNOON, NULL]
+END_CALLSHIFT
+
+NEW_INTERACTION
+SETTINGS[EVENING, EXT_STREET]
+
+
+NARRATOR(NULL): After what felt like an endless day, your shift finally ends.
+
+
+NARRATOR(NULL): You, Rosario, and Amaya walk out together.
+
+
+ROSARIO(NEUTRAL): PC, walk with me for a bit?
+
+
+ROSARIO(NEUTRAL): I wanted to talk about the team project.
+
+
+NARRATOR(NULL): Suddenly, Amaya squeezes between you and Rosario.
+
+
+AMAYA(NEUTRAL): Actually, PC and I were going to grab something to eat.
+
+
+AMAYA(NEUTRAL): Right, PC?
+
+
+PLAYER(NULL): We were?
+
+
+AMAYA(NEUTRAL): Yeah. We were.
+
+
+ROSARIO(NEUTRAL): Amaya, I wasn’t trying to steal them.
+
+
+AMAYA(NEUTRAL): I know.
+
+
+AMAYA(NEUTRAL): But we have plans.
+
+
+NARRATOR(NULL): The walk becomes tense.
+
+
+NARRATOR(NULL): Amaya stays close, brushing against you.
+
+
+NARRATOR(NULL): Whenever Rosario speaks, she cuts in first.
+
+
+ROSARIO(NEUTRAL): PC, what do you think about the new workflow software?
+
+
+AMAYA(NEUTRAL): It’s fine, right, PC?
+
+
+PLAYER(NULL): I… yeah, it’s fine.
+
+
+ROSARIO(NEUTRAL): I was asking PC, Amaya.
+
+
+AMAYA(NEUTRAL): You got your answer, didn’t you?
+
+
+NARRATOR(NULL): A phone suddenly buzzes.
+
+
+NARRATOR(NULL): Amaya checks it.
+
+
+NARRATOR(NULL): Her expression drops.
+
+
+PLAYER(NULL): Everything okay?
+
+
+AMAYA(NEUTRAL): Yeah… I just have to go.
+
+
+NARRATOR(NULL): She turns to Rosario.
+
+
+AMAYA(NEUTRAL): Don’t keep them too long.
+
+
+ROSARIO(NEUTRAL): Wouldn’t dream of it.
+
+
+NARRATOR(NULL): She walks away quickly.
+
+
+NARRATOR(NULL): You watch her until she disappears.
+
+
+ROSARIO(SOFT): She really cares about you.
+
+
+PLAYER(NULL): She’s just protective.
+
+
+PLAYER(NULL): We’ve known each other since high school.
+
+
+ROSARIO(NEUTRAL): No.
+
+
+ROSARIO(NEUTRAL): That was jealousy.
+
+
+PLAYER(NULL): What?
+
+
+ROSARIO(NEUTRAL): PC… can I be honest?
+
+
+PLAYER(NULL): Of course.
+
+
+ROSARIO(SOFT): I hope you let her be herself.
+
+
+ROSARIO(SOFT): The real her.
+
+
+NARRATOR(NULL): He pauses.
+
+
+ROSARIO(SOFT): She’s overworked.
+
+
+ROSARIO(SOFT): That smile she shows? It’s been fake for a long time.
+
+
+PLAYER(NULL): You noticed too?
+
+
+ROSARIO(NEUTRAL): Everyone has.
+
+
+ROSARIO(NEUTRAL): But she pushes people away.
+
+
+NARRATOR(NULL): He looks at you seriously.
+
+
+ROSARIO(SOFT): What she showed tonight…
+
+
+ROSARIO(SOFT): That jealousy… that emotion…
+
+
+ROSARIO(SOFT): That’s her real self.
+
+
+PLAYER(NULL): Why are you telling me this?
+
+
+ROSARIO(SOFT): Because I like you.
+
+
+ROSARIO(SOFT): But she needs you more than I do.
+
+
+ROSARIO(SOFT): She reminds me of who I used to be.
+
+
+NARRATOR(NULL): He gives a small nod and walks away.
+
+
+NARRATOR(NULL): Leaving you alone.
+
+
+NARRATOR(NULL): With your thoughts.
+
+
+NARRATOR(NULL): And his confession.
+
+
+END_INTERACTION

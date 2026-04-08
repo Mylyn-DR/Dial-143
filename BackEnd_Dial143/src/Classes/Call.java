@@ -8,6 +8,23 @@ package Classes;
  *
  * @author Dell
  */
-public class Call extends Choice{
-
+public class Call {
+    private String difficulty;
+    private boolean hasCalled;
+    private Caller caller; 
+    private Conversation[] conversations; 
+    public Call(String diff)
+    { difficulty = diff; 
+      conversations = new Conversation[2]; 
+      hasCalled = false; 
+      caller = null; 
+    }
+    public void addConversation(int idx, Conversation conv)
+    { conversations[idx] = conv; }
+    public void readConversation(){
+        conversations[0].read();
+        conversations[1].read();
+    }
+    public void setCaller(Caller caller){ this.caller = caller; }
+    public Caller getCaller(){ return caller; }
 }

@@ -12,6 +12,8 @@ public class DialogueLine {
     private String speaker, expression, dialogue; 
     public DialogueLine(String speaker, String expression, String dialogue)
     { this.speaker = speaker; this.expression = expression; this.dialogue = dialogue; }
+    public DialogueLine(String speaker, String dialogue)
+    { this(speaker, null, dialogue); }
     public String getSpeaker(){ return speaker; }
     public String getExpression(){ return expression; }
     public String getDialogue(){ return dialogue; }
