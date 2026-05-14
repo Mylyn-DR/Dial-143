@@ -1,0 +1,148 @@
+package Storyline;
+
+import Entities.Character;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Day2 implements DayInterface {
+
+    private static final SceneEntry[] MORNING = {
+        SceneEntry.narrator("You went off to work earlier than usual. After the previous day's interactions, work seemed like more of a breeze than you expected it to be.", "StreetMorning.jpg"),
+        SceneEntry.narrator("Your body still aches from the first day, but something feels different today. Lighter. Maybe it's the thought of seeing familiar faces.", "StreetMorning.jpg"),
+        SceneEntry.narrator("You decide to grab breakfast first before heading in.", "ConvenienceStore.jpg"),
+        SceneEntry.dialogue("Cloma", "How's your first day of work?", "single:Cloma_Casual", "ConvenienceStore.jpg"),
+        SceneEntry.choiceMarker("MORNING_CHOICE_1"),  // ← Changed
+        SceneEntry.choiceMarker("MORNING_CHOICE_2"),  // ← Changed
+        SceneEntry.narrator("After the short conversation, you finish your breakfast and head to the office building across the street. "
+                + "The morning air feels cooler now, but something about Cloma's warmth stays with you.", "BuildingMorning.jpg"),
+        SceneEntry.narrator("You settle into your cubicle and log into your computer. Everything seems normal at first, until the screen freezes. "
+                + "Then it goes black and spams you with error messages.", "MorningOffice.jpg"),
+        SceneEntry.narrator("You try restarting. Nothing. You try again. Still nothing.", "MorningOffice.jpg"),
+        SceneEntry.dialogue("{name}", "Of course. Second day, and my computer already hates me.", "none", "MorningOffice.jpg"),
+        SceneEntry.narrator("With no other choice, you get up and head toward the IT department.", "MorningOffice.jpg"),
+        SceneEntry.narrator("The IT department is quieter than your cubicle area. The only sounds are the hum of computers and the occasional click of a keyboard. In the corner, you spot him.", "ITDepartment.jpg"),
+        SceneEntry.narrator("A man with a nametag, 'Celeres,' looks sleepy and nonchalant, barely paying attention to anything. His eyes are half-lidded, "
+                + "and he stares at his screen like it personally offended him.", "ITDepartment.jpg"),
+        SceneEntry.narrator("Celeres finally notices you standing there. His expression doesn't change much, but he straightens slightly.", "ITDepartment.jpg"),
+        SceneEntry.dialogue("Celeres", "You look new. Are you a new hire?", "single:Celeres_Casual", "ITDepartment.jpg"),
+        SceneEntry.choiceMarker("MORNING_CHOICE_3"),  // ← Changed
+    };
+    
+    private static final SceneEntry[] AFTERNOON = {};
+    
+    private static final SceneEntry[] EVENING = {
+        SceneEntry.narrator("The evening hours arrived and everyone quietly packed up their items to leave. As you were ready to join the messy crowd of employees, you accidentally bumped into a man's chest.", "EveningOffice.jpg"),
+        SceneEntry.dialogue("Celeres", "..!", "single:Celeres_Casual", "EveningOffice.jpg"),
+        SceneEntry.dialogue("{name}", "Sorry! I didn't see you.", "single:Celeres_Casual", "EveningOffice.jpg"),
+        SceneEntry.dialogue("Celeres", "It's alright. {name}, was it?", "single:Celeres_Smile", "EveningOffice.jpg"),
+        SceneEntry.narrator("\"I don't think I have told him my name before.\" was a thought that came to your mind.","EveningOffice.jpg"),
+        SceneEntry.choiceMarker("EVENING_CHOICE_1"),  // ← Changed
+        SceneEntry.dialogue("Celeres", "Also, you're the only one who came to IT today that didn't microwave fish in the break room. So. Memorable.", "single:Celeres_Smile", "EveningOffice.jpg"),
+        SceneEntry.dialogue("{name}", "Low bar.", "none", "EveningOffice.jpg"),
+        SceneEntry.dialogue("Celeres", "Very low. Watch where you're going next time, PC.", "single:Celeres_Casual", "EveningOffice.jpg"),
+        SceneEntry.dialogue("{name}", "I'll try. Goodnight, Celeres.", "single:Celeres_Casual", "EveningOffice.jpg"),
+        SceneEntry.dialogue("Celeres", "Night.", "single:Celeres_Casual", "EveningOffice.jpg"),
+    };
+    
+    // Choice arrays remain the same
+    private static final ChoiceEntry[] CHOICES_M4 = {
+        new ChoiceEntry("Who are you?", 0, 0, Character.CLOMA,
+            SceneEntry.dialogue("{name}", "Um, sorry? But who are you again?", "none", "ConvenienceStore.jpg"),
+            SceneEntry.dialogue("Cloma", "Oh! You forgot me already. So I will introduce myself again! By the way, I am Cloma, the HR here in the company.", "single:Cloma_Smile", "ConvenienceStore.jpg")
+        ),
+        new ChoiceEntry("Hello!", 5, 3, Character.CLOMA,
+            SceneEntry.dialogue("{name}", "Oh, hello, Miss Cloma! I'm the one you hired. Thanks for that!", "single:Cloma_Casual", "ConvenienceStore.jpg"),
+            SceneEntry.dialogue("Cloma", "You remembered me! It seems like everything went well.", "single:Cloma_Smile", "ConvenienceStore.jpg"),
+            SceneEntry.dialogue("{name}", "My first day was nervous, but somehow I slowly adjusted to the environment here because they are so approachable.", "single:Cloma_Casual", "ConvenienceStore.jpg"),
+            SceneEntry.dialogue("Cloma", "Glad to hear that! If you have something to ask in terms of the company's policies, you can go to my office.", "single:Cloma_Casual", "ConvenienceStore.jpg")
+        ),
+    };
+    
+    private static final ChoiceEntry[] CHOICES_M5 = {
+        new ChoiceEntry("Noted!", 5, 3, Character.CLOMA,
+            SceneEntry.dialogue("{name}", "Noted, Miss Cloma! Thank you so much! I really appreciate you.", "single:Cloma_Smile", "ConvenienceStore.jpg"),
+            SceneEntry.dialogue("Cloma", "No worries! Well, I'll be heading out now! See you around PC! Take care of yourself today, alright? Don't overwork yourself.", "single:Cloma_Smile", "ConvenienceStore.jpg")
+        ),
+        new ChoiceEntry("Embarrassed", 4, 0, Character.CLOMA,
+            SceneEntry.dialogue("{name}", "I'm sorry, but I will just ask my coworkers about it so that I won't bother you.", "none", "ConvenienceStore.jpg"),
+            SceneEntry.dialogue("Cloma", "If you say so. But remember, I don't consider questions a bother. That's literally my job. See you around, {name}.", "single:Cloma_Smile", "ConvenienceStore.jpg"),
+            SceneEntry.dialogue("{name}", "See you around, Miss Cloma! Thank you!", "single:Cloma_Casual", "ConvenienceStore.jpg")
+        ),
+    };
+    
+    private static final ChoiceEntry[] CHOICES_M15 = {
+        new ChoiceEntry("Ask for help directly", 5, 3, Character.CELERES,
+            SceneEntry.dialogue("{name}", "I am. I heard I'll ask for help here on fixing my computer. The computer keeps freezing.", "none", "ITDepartment.jpg"),
+            SceneEntry.dialogue("{name}", "If it's alright. Can you check it?", "none", "ITDepartment.jpg"),
+            SceneEntry.dialogue("Celeres", "Alright. First, did you restart the computer?", "single:Celeres_Casual", "ITDepartment.jpg"),
+            SceneEntry.dialogue("{name}", "Yes, I did.", "none", "ITDepartment.jpg"),
+            SceneEntry.dialogue("Celeres", "Okay then.", "single:Celeres_Casual", "ITDepartment.jpg"),
+            SceneEntry.narrator("Celeres follows you to your workstation. He taps a few keys, runs some diagnostics, and within minutes, the issue is resolved.", "MorningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "It's fixed. Outdated drivers. Workstation 420, one of the old ones.", "single:Celeres_Casual", "MorningOffice.jpg"),
+            SceneEntry.dialogue("{name}", "Thank you, Sir Celeres!", "none", "MorningOffice.jpg")
+        ),
+        new ChoiceEntry("Just inform the issue", 2, 3, Character.CELERES,
+            SceneEntry.dialogue("{name}", "Ah, yes. I am. My computer keeps freezing.", "none", "ITDepartment.jpg"),
+            SceneEntry.dialogue("Celeres", "Freezing? Workstation number?", "single:Celeres_Casual", "ITDepartment.jpg"),
+            SceneEntry.dialogue("{name}", "420.", "none", "ITDepartment.jpg"),
+            SceneEntry.dialogue("Celeres", "Okay then. I'll come by. Eventually.", "single:Celeres_Casual", "ITDepartment.jpg"),
+            SceneEntry.dialogue("{name}", "I'll leave now, then.", "none", "ITDepartment.jpg"),
+            SceneEntry.narrator("A brief silence enters the department after you immediately run from the awkward encounter, not daring to last another second there.", "ITDepartment.jpg"),
+            SceneEntry.dialogue("Celeres", "…", "single:Celeres_Casual", "ITDepartment.jpg"),
+            SceneEntry.dialogue("Celeres", "Am I that intimidating?", "single:Celeres_Sad", "ITDepartment.jpg"),
+            SceneEntry.narrator("Thirty minutes passed, and Celeres appeared at your cubicle, just like he promised. He looks the same. Like he never moved.", "MorningOffice.jpg"),
+            SceneEntry.narrator("He taps a few keys, runs some diagnostics, and within minutes, the issue is resolved.", "MorningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "It's fixed. Outdated drivers.", "single:Celeres_Casual", "MorningOffice.jpg"),
+            SceneEntry.dialogue("{name}", "Um. Thank you, Sir Celeres. Sorry for bothering you earlier. You seemed busy.", "Single:Celeres_Casual", "MorningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "… I wasn't busy. Don't worry.", "single:Celeres_Blushing", "MorningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "Also, Celeres is fine.", "single:Celeres_Smile", "MorningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "Just tell me directly if any issues come up.", "single:Celeres_Casual", "MorningOffice.jpg"),
+            SceneEntry.dialogue("{name}", "I will. Thanks again.", "none", "MorningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "Yeah. Okay. Bye.", "single:Celeres_Blushing", "MorningOffice.jpg"),
+            SceneEntry.narrator("He leaves faster than you've ever seen him move. You could swear he was almost... embarrassed?", "MorningOffice.jpg")
+        ),
+    };
+    
+    private static final ChoiceEntry[] CHOICES_E5 = {
+        new ChoiceEntry("Question", 0, 0, Character.CELERES,
+            SceneEntry.dialogue("{name}", "How'd you know? I think I have never told you my name before.", "none", "EveningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "Cloma told me about you. She's a college friend. "
+                    + "Started talking for who knows how long on how it's great to have a newcomer she can mentor.", "single:Celeres_Smile", "EveningOffice.jpg")
+        ),
+        new ChoiceEntry("Surprised", 3, 0, Character.CELERES,
+            SceneEntry.dialogue("{name}", "You've heard about me before?", "none", "EveningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "You know Cloma? She's my college friend. She went up to me hours ago, "
+                    + "talking about you. That's when I learned you and the person she mentioned were one and the same.", "single:Celeres_Casual", "EveningOffice.jpg"),
+            SceneEntry.dialogue("{name}", "Ah, that makes a lot of sense.", "Celeres_Casual", "EveningOffice.jpg"),
+            SceneEntry.dialogue("Celeres", "That and your station number. 420. I remember numbers.", "single:Celeres_Casual", "EveningOffice.jpg")
+        ),
+    };
+    
+    // Choice map for markers
+    private static final Map<String, ChoiceEntry[]> choiceMap = new HashMap<>();
+    
+    static {
+        choiceMap.put("MORNING_CHOICE_1", CHOICES_M4);
+        choiceMap.put("MORNING_CHOICE_2", CHOICES_M5);
+        choiceMap.put("MORNING_CHOICE_3", CHOICES_M15);
+        choiceMap.put("EVENING_CHOICE_1", CHOICES_E5);
+    }
+
+    @Override
+    public SceneEntry[] getMorningScenes() { return MORNING; }
+    @Override
+    public SceneEntry[] getAfternoonScenes() { return new SceneEntry[0]; }
+    @Override
+    public SceneEntry[] getEveningScenes() { return EVENING; }
+
+    @Override
+    public ChoiceEntry[] getChoicesForScene(int sceneIndex, String segment) {
+        return null;
+    }
+    
+    @Override
+    public ChoiceEntry[] getChoicesForMarker(String choiceId) {
+        System.out.println("Day2.getChoicesForMarker(" + choiceId + ") called");
+        return choiceMap.get(choiceId);
+    }
+}

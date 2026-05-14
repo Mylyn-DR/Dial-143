@@ -1,0 +1,239 @@
+NEW_CALL: Sarah
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hi, I'm at NAIA Terminal 3 and my flight to Cebu was just cancelled. Hay naku, I really need to get home to my kids, can you see what's available?
+OPTION_BEST (Check available flights): I am so sorry for the hassle, Sarah. I understand how important it is to get back to your kids. Let me check the next available flight for you right now. | Salamat, I appreciate you moving so quickly on this.
+OPTION_GOOD (Ask for booking reference): I can help you rebook, but I need you to wait while I refresh my system. | Uh... um okay. Please try to hurry, it's very crowded here.
+OPTION_BAD (Transfer to rebooking): You should just fall in line at the ticket booth there; they can help you faster than I can. | Sus! I've been in line for an hour already! Why did I even call you?
+OPTION_NOANSWER (No response): Hello? Are you still there? I really need help here!
+
+NEW_CALL: Sarah
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: It's Sarah again. I finally landed in Mactan, but my checked luggage is missing! My kids' pasalubong are in there!
+OPTION_BEST (File missing baggage report): That sounds very stressful, especially after your delayed flight. Let's file a Missing Baggage Report right now so we can track it. | Hala, please! I really need those bags, my kids are waiting.
+OPTION_GOOD (Ask for item list): I can help, but I need you to list all the items inside your luggage for documentation. | Uh... um okay. There's chocolates, clothes... do I really need to list everything now?
+OPTION_BAD (Tell her to wait): This is normal during peak season. Just wait for it to show up later. | Ano? The carousel has stopped! You're not helping at all!
+OPTION_NOANSWER (No response): Hello?? Again? Why is no one answering me?!
+
+NEW_CALL: Sarah
+DIFFICULTY: HARD
+CALL_DESCRIPTION: I am so upset! The courier delivered my bag but the lock is broken and my laptop is gone! Nanalo na talaga ako sa malas! I want a refund!
+OPTION_BEST (File theft report): Sarah, I'm truly sorry. This is a serious case. I will file a "Theft in Transit" report immediately for investigation. | You better! That laptop is for my work!
+OPTION_GOOD (Process flight refund): I'm really sorry, Sarah. I can process a refund for your flight ticket. | Uh... um okay. But the laptop costs way more than that...
+OPTION_BAD (Cite no liability policy): Our policy states we are not liable for electronics. You should have read the fine print. | Bastos! I'll report this to DTI!
+OPTION_NOANSWER (No response): Unbelievable. Is anyone even listening to me?!
+
+NEW_CALL: Leo
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: Hey, uh, I think my gaming account was hacked. I tried logging in to Pinoy Quest this morning and it says my password was changed. I've spent thousands of pesos on skins there!
+OPTION_BEST (Verify account ownership): That's a nightmare, Leo. I understand how much effort you put into your account. Let's verify your ownership right now so we can secure it. | Thanks, man. I'm really stressed because I have a tournament later tonight.
+OPTION_GOOD (Ask for username): I can help with that. Please provide your username and your last successful login. | Uh... um okay. I think it was around 11:00 PM last night? I'm not 100% sure.
+OPTION_BAD (Tell him to reset password): Have you tried clicking "Forgot Password"? That's faster than calling us. | Luh! Obviously I tried that! The recovery email was changed too! Do your job!
+OPTION_NOANSWER (No response): Hello? Bro, don't ghost me right now!
+
+NEW_CALL: Leo
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: Hi, it's Leo again. I got my account back, but half of my rare skins are missing! The hacker must have transferred them!
+OPTION_BEST (Initiate rollback request): I'm really sorry that happened, Leo. I'll initiate a rollback request to restore your inventory to its previous state. | Please, those were limited skins. I worked hard for those.
+OPTION_GOOD (Review trade logs): I'll open a ticket and review the trade logs to track where the items went. | Uh... um okay. How long will that take? I really want them back.
+OPTION_BAD (Blame lack of 2FA): This could've been avoided if you enabled 2FA. We usually don't refund items lost this way. | Grabe ka naman! I'm the victim here!
+OPTION_NOANSWER (No response): Again?? Why is no one answering?!
+
+NEW_CALL: Leo
+DIFFICULTY: HARD
+CALL_DESCRIPTION: Look, I'm really frustrated. My account just got banned for cheating! I didn't cheat! It must be because of the hacker!
+OPTION_BEST (Check IP logs): I understand your frustration, Leo. The system may have flagged the hacker's activity. Let me check the IP logs to confirm. | Exactly! Check the IP! That wasn't me!
+OPTION_GOOD (Review ban reason): I'll review the system notes to see what triggered the ban. | Uh... um okay. But I didn't do anything wrong.
+OPTION_BAD (Say bans are final): Our system is accurate. If you were banned, you likely broke the rules. | Ang labo mo! I told you I was hacked!
+OPTION_NOANSWER (No response): Seriously? You're just ignoring me now?
+
+NEW_CALL: David
+DIFFICULTY: HARD
+CALL_DESCRIPTION: Good morning. This is David. My laptop just went black in the middle of a report, and it won't turn on at all. I have a board meeting at 10:00 AM—that's in less than an hour!
+OPTION_BEST (Perform hard reset): I understand the urgency, David. Let's perform a hard reset immediately while I check backup solutions for you. | Thank you. I'm really under pressure right now. My presentation is saved locally.
+OPTION_GOOD (Check warranty): I can assist you, but I need the device serial number to check your warranty. | Uh... um okay. Let me find it. It's a bit small, give me a second.
+OPTION_BAD (Use another device): Do you have another device you can use for the meeting instead? | Ano ba?! The file is inside this laptop! I need it fixed now!
+OPTION_NOANSWER (No response): Hello? I don't have time for this. Are you still there?
+
+NEW_CALL: David
+DIFFICULTY: HARD
+CALL_DESCRIPTION: It's David again. I got through the meeting, but now my laptop is making a loud grinding noise and smells like burning! This is dangerous!
+OPTION_BEST (Escalate for replacement): David, please turn off and unplug the laptop immediately. Safety comes first. I will escalate this to our Safety Team for a replacement. | Okay, it's off now. Good thing I noticed it early.
+OPTION_GOOD (Check fan issue): It may be a fan issue. If you have tools, you can try opening it carefully and cleaning it. | Uh... um okay. I'll try, but I'm not confident doing this.
+OPTION_BAD (Let it cool down): Just let it cool down for a while. It should return to normal after. | Seryoso ka? It smells like burning plastic!
+OPTION_NOANSWER (No response): Again? No response? This is very unprofessional.
+
+NEW_CALL: Linda
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: Hello? I just got my bill for this month and it's ₱2,500! My plan is only ₱1,699. Why is there a ₱40 increment? Anak ng... I always pay on time!
+OPTION_BEST (Review statement charges): I understand your concern, Linda; nobody likes surprise charges. Let me pull up your statement so we can go through it together and find that extra amount. | Please do, because I've been looking at this for ten minutes and I don't see any reason for it.
+OPTION_GOOD (Check adjustments column): I can check that for you. Can you look at the second page under the "Adjustments" column and tell me what the code says? | Uh... um okay. Wait, let me get my reading glasses... it says "VAS-P5" or something like that?
+OPTION_BAD (Blame tax update): Our rates went up across the board this month because of the new tax laws. Everyone's bill is a bit higher now. | Ano?! You can't just change my contract without telling me! This is daylight robbery!
+OPTION_NOANSWER (No response): Is this company for real?
+
+NEW_CALL: Linda
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hi, it's Linda again. I just wanted to make sure that the credit you promised earlier is actually showing up on my account. I don't want to be surprised again!
+OPTION_BEST (Confirm credit posted): I checked it for you, Linda, and the ₱40 credit is already posted. Here is your reference number for peace of mind. | Oh, mabuti naman. I just wanted to be sure. Thank you for being so patient with me.
+OPTION_GOOD (Credit will show next month): The system is a bit slow, so you'll only see the deduction on your next statement, not the current one. | Uh... um okay. I hope you're right. I'll be watching my mail very closely.
+OPTION_BAD (Tell her it's just ₱40): Ma'am, it's only ₱40. It's already been handled, so there's no need to follow up every hour. | Ang bastos mo ha! Even if it's one peso, it's my money! I want to talk to your manager!
+OPTION_NOANSWER (No response): Again? This company is the worst!
+
+NEW_CALL: Arthur
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hello? Can you hear me? This is Arthur. I'm trying to talk to my cardiologist on the tablet my grandson gave me, but he says he can't hear a word I'm saying! Jusko, my check-up is in five minutes!
+OPTION_BEST (Check microphone settings): Don't worry, Lolo Arthur, we still have time. Let's look at the bottom of your screen. Do you see a small microphone icon with a red line through it? | Oh, let me see... my eyes aren't what they used to be. Ah, yes! There is a little red line there.
+OPTION_GOOD (Restart the tablet): I think your tablet might be glitching. Can you try turning it off and on again real quick? | Uh... um okay. Wait, which one is the power button again? The long one or the short one?
+OPTION_BAD (Call grandson instead): I'm just a call center agent, not a technician. You should call your grandson to fix it for you. | Aba! My grandson is at work! That's why I called the help line! Forget it, I'll miss my appointment.
+OPTION_NOANSWER (No response): Hello? Are you still there? My appointment is about to start!
+
+NEW_CALL: Arthur
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: It's me again, Arthur. I was talking to the doctor, but suddenly his face disappeared and the screen went white! I think I broke the internet! Hay buhay...
+OPTION_BEST (Check Wi-Fi connection): You didn't break anything, Lolo Arthur! It sounds like the Wi-Fi got disconnected. Can you check if the small fan-shaped icon at the top is still there? | The fan? Oh, wait... no, it's gone. There's just a little box there now.
+OPTION_GOOD (Reset the router): I think your router might need a reset. Can you go to your living room and unplug the black box for about ten seconds? | Uh... um okay. Let me get my walker... it's a bit far, please wait for me.
+OPTION_BAD (Doctor ended call): Maybe your doctor already ended the call. They are usually very busy. | Pastilan! He was explaining my medication! He wouldn't just leave like that!
+OPTION_NOANSWER (No response): Hello? Are you still there? The doctor might be waiting!
+
+NEW_CALL: Officer Mike
+DIFFICULTY: HARD
+CALL_DESCRIPTION: Good day. This is Officer Mike from the Internal Security Division of Khai Global. We've detected a breach on your station, and I need you to verify your system credentials immediately to prevent a lockdown.
+OPTION_BEST (Ask for ticket number): Hello, Officer. I wasn't notified of any maintenance. May I have the official IT ticket number for this request before we proceed? | Tsk. This is an emergency sweep, there's no time for tickets! If you don't cooperate, your login will be terminated in 60 seconds!
+OPTION_GOOD (Verify department): Which specific Security Division are you from? I need to verify your department first. | Uh... um okay. I'm from the... Regional Data Oversight. Just give me your employee ID so we can start.
+OPTION_BAD (Give credentials immediately): Oh, sorry! I don't want to get locked out. My username is Agent_77 and my temporary password is "Khai2026." | Sige, stay on the line while I "verify" this. (Typing and faint laughing in the background.)
+OPTION_NOANSWER (No response): Agent, are you there? Your system is about to be locked!
+
+NEW_CALL: Officer Mike
+DIFFICULTY: HARD
+CALL_DESCRIPTION: (In a deeper voice) This is the IT Helpdesk. We had a caller earlier pretending to be security. You need to download this antivirus tool immediately to clean your PC.
+OPTION_BEST (Refuse suspicious download): That's suspicious. I just received a similar call earlier. I won't download anything without an official announcement on our internal system. | I'm the one sending the announcement! It's just delayed because of the virus! Download it now or your PC will crash!
+OPTION_GOOD (Ask for supervisor name): I need your full name and your supervisor's name before I proceed. | Uh... um okay. My name is Mike Santos. My supervisor is Mr. Rodriguez. Just click the link, bilis!
+OPTION_BAD (Download the file): Thanks for the warning! I'm downloading and running it now. | Excellent. Just wait for the screen to go black. That means it's working.
+OPTION_NOANSWER (No response): Hello? Why aren't you responding? Your system is at risk!
+
+NEW_CALL: Maya
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hi! I just saw a deduction of ₱599 on my GCash for a "Premium Stream" subscription. I only signed up for the 7-day free trial, and I'm 100% sure I cancelled it last week! Nakakainis talaga!
+OPTION_BEST (Check cancellation records): I understand how frustrating that is, Maya; no one wants an unexpected charge. Let me check our records to see if your cancellation went through on time. | Salamat. I really made sure to cancel it, so I don't know why I was still charged.
+OPTION_GOOD (Request screenshot proof): I can look into that, but I'll need a screenshot of your cancellation confirmation email. | Uh... um okay. Wait, let me check my inbox... I hope I didn't delete it.
+OPTION_BAD (Blame customer mistake): Usually, customers think they cancelled, but they actually missed the deadline. | Grabe ka naman! I told you I cancelled it! Why are you blaming me?
+OPTION_NOANSWER (No response): Hello? Are you still there? This is really stressing me out.
+
+NEW_CALL: Chloe
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: Hi! I'm calling about my parcel from Zalora. It says "Delivered" on the app, but I've been home all day in our condo in BGC and no one knocked! Sayang naman, that was my outfit for a wedding tomorrow!
+OPTION_BEST (Check GPS delivery log): Oh no, that's stressful, Chloe! Especially with a wedding tomorrow. Let me check the rider's GPS logs and the delivery photo to see where exactly it was left. | Please! I even checked the lobby, and the guard said no riders came for my unit today.
+OPTION_GOOD (Ask to check neighbors): I can look into that. But before I file a report, can you go around your floor and ask your neighbors if they accidentally took it? | Uh... um okay. I'll go out and check the doors near me... stay on the line, please.
+OPTION_BAD (Blame family member): If the system says delivered, our riders usually don't make mistakes. Maybe someone from your family took it and didn't tell you. | Hala! I live alone! Are you saying I'm lying? I want a refund right now!
+OPTION_NOANSWER (No response): Hello? Are you still there? This is urgent!
+
+NEW_CALL: Jordan
+DIFFICULTY: HARD
+CALL_DESCRIPTION: Boss, patulong naman! I was trying to pay my tuition via the app, but I typed one digit wrong in the account number. ₱15,000 went to a random person instead of my school! Please tell me you can pull that money back!
+OPTION_BEST (Flag and freeze transaction): That is a huge amount, Jordan; I understand why you're panicking. Let me immediately flag that transaction and contact the receiving bank to "freeze" the funds before they are withdrawn. | Please, bilis! If that person spends it, I'm dead. My parents worked so hard for that money.
+OPTION_GOOD (Request reference number): I can try to help. I need the 12-digit reference number and the name of the person who accidentally received your ₱15,000. | Uh... um okay. Wait, the name on the receipt just says "J*** M***." I don't know who that is!
+OPTION_BAD (Cite terms and conditions): Our terms and conditions say that users are responsible for checking the account number. Once you hit "Send," the money is gone. | Ano?! So you're just going to let someone steal my tuition? Walang kwenta naman tong app niyo!
+OPTION_NOANSWER (No response): Hello? Boss? Can you hear me?
+
+NEW_CALL: Elena
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: Hi, I'm calling from Marikina. Our street flooded again last night and my basement is a mess! I need to know if my "Home Protect" policy covers water backup or if I'm going to have to pay for this out of pocket?
+OPTION_BEST (Review policy coverage): I am so sorry to hear about the flooding, Elena; I know how stressful that is in your area. Let's pull up your "Home Protect" details right now to check for that specific coverage. | Salamat. I've been a loyal client for five years, so I'm really hoping I'm covered for this.
+OPTION_GOOD (Ask water level measurement): I can help with that. Can you tell me exactly how many inches of water entered the basement so I can categorize the claim? | Uh... um okay. Wait, I'll go down and check with a ruler... it's still a bit muddy there, please wait.
+OPTION_BAD (Call it Act of God): Usually, heavy rain in Marikina is considered an "Act of God," which most basic policies don't cover at all. | Ano?! I pay my premiums every month precisely for this! Why am I even talking to you?
+OPTION_NOANSWER (No response): Hello? Are you still there?
+
+NEW_CALL: Marcus
+DIFFICULTY: HARD
+CALL_DESCRIPTION: Good morning. This is Marcus. I just checked my online banking and there are three unauthorized charges for ₱25,000 each from an electronics store in Makati! I have my card right here in my wallet in Pasig! Someone is using my identity!
+OPTION_BEST (Block card immediately): That is a serious security breach, Marcus; I understand the alarm. I am blocking your card right this second to prevent any more charges while we investigate. | Thank you! Please, paki-bilis. I worked hard for those savings and I don't want to lose another centavo.
+OPTION_GOOD (Verify recent transactions): I can help you with that. To verify it's you, please list the last five items you actually bought using that card. | Uh... um okay. Wait, let me think... I bought gas at Shell... some groceries at SM... it's hard to remember them all right now.
+OPTION_BAD (Go to the store yourself): Since you know where the store is, maybe you should go there and ask them to show you the CCTV of who used your card. | Ano?! I'm in Pasig and I have a job! That's why I'm calling the bank! You're supposed to protect my money!
+OPTION_NOANSWER (No response): Hello? Are you there? This is urgent!
+
+NEW_CALL: Sam
+DIFFICULTY: HARD
+CALL_DESCRIPTION: Hi, this is Sam from the Dev team at TechHub. Our project management tool is completely crashing every time we try to upload a 50MB PDF. It's affecting the whole team's workflow and we have a deployment tonight!
+OPTION_BEST (Check server error logs): I understand the urgency, Sam; a deployment day is always high-pressure. Let me check the real-time error logs and try to replicate that 50MB crash on my end. | Salamat, man. We already tried clearing the cache and cookies, but the "500 Internal Server Error" still pops up.
+OPTION_GOOD (Ask browser version): I can look into that. Can you tell me exactly which version of Chrome you are using and if you're on Windows or Mac? | Uh... um okay. I'm on the latest build... wait, let me check the "About" section... it's Version 122.0.
+OPTION_BAD (Compress the file): Have you tried just making the PDF smaller? 50MB is a bit large for a browser-based upload anyway. | Luh! Our contract says we have a 100MB limit! I'm not going to compress a high-res blueprint just because your app is glitching!
+OPTION_NOANSWER (No response): Hello? The system's broken and no one's here!
+
+NEW_CALL: Robert
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hello? This is Robert. My two-door refrigerator is making a very loud "clunking" sound every time the motor starts. Nakakairita na, I can't even sleep! Is this still covered by the warranty?
+OPTION_BEST (Check warranty status): I'm sorry to hear about the noise, Robert; a quiet home is important. Let me pull up your purchase record to see if your unit is still covered for a free repair. | Salamat, nak. I bought this at Abenson two years ago, I hope the compressor is still under guarantee.
+OPTION_GOOD (Record the sound): I can check that for you. Can you record the "clunking" sound and send it to our Viber so our technicians can hear it? | Uh... um okay. Wait, let me figure out how to record... I'm not very good at using this smartphone.
+OPTION_BAD (Blame overloaded freezer): You probably just put too much frozen meat in there. If the fan is hitting the ice, that's your fault, not the machine's. | Aba! I've been using refrigerators since before you were born! Don't tell me how to use my appliances!
+OPTION_NOANSWER (No response): Why isn't anyone answering? I need help!
+
+NEW_CALL: Susan
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hello? Hija, I think I'm in trouble. I was trying to open my mobile banking to pay for my Meralco bill, but I forgot my new password! Now it says "Account Locked." Can you please help me? I don't want to go to the branch, the line is so long!
+OPTION_BEST (Verify identity over phone): Don't worry, Tita Susan, we can fix this right here over the phone so you don't have to go to the branch. Let's just verify a few details to get you back in. | Salamat! You're so kind. I was really getting nervous that my money was gone.
+OPTION_GOOD (Wait 24 hours): I can check that, but usually, you just have to wait 24 hours and the app will unlock itself automatically. | Uh... um okay. But my bill is due today. Are you sure there's no faster way?
+OPTION_BAD (Lecture about passwords): You really should keep your passwords in a notebook, Ma'am. It's hard for us to keep resetting these for everyone. | Aba! I'm already stressed and you're lecturing me? I'll just transfer my money to another bank!
+OPTION_NOANSWER (No response): I've been on hold forever! Is anyone there?
+
+NEW_CALL: George
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: Hello? I bought this "Smart" thermostat because my son says it will save me money on the aircon. But I've been staring at this screen for an hour and it just says "No Gateway Found." Ano ba ito? Is it broken?
+OPTION_BEST (Explain Wi-Fi connection): I understand the confusion, George; "Gateway" is just a fancy word for your Wi-Fi connection. Let's check if your router is close enough to the thermostat to talk to it. | Salamat, nak. I thought I needed to buy another expensive gadget! My router is just in the next room.
+OPTION_GOOD (Check manual instructions): I can help, but have you tried following the pictures on page 3 of the manual? It usually shows how to link the two devices. | Uh... um okay. Wait, let me find the booklet... the print is very small, I need my magnifying glass.
+OPTION_BAD (Blame US compatibility): Most of these smart gadgets are made for the US. It probably won't work with your local internet provider anyway. | Luh! The store in SM said this was the best one! Why did they sell it to me then?
+OPTION_NOANSWER (No response): Hello? This is frustrating—no one's picking up!
+
+NEW_CALL: Martha
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hello? Neng, is this the pharmacy? This is Lola Martha. I'm just calling to check on my maintenance medicine for my high blood. My son ordered it online, but I'm worried it won't arrive before I run out tomorrow!
+OPTION_BEST (Track delivery status): Don't worry, Lola Martha, I'm here to help you. Let me look up your name in our system right now so I can tell you exactly where your medicine is. | Salamat, neng. I'm already 82, so I get a bit forgetful and anxious about these things.
+OPTION_GOOD (Ask for order number): I can check that for you. Can you read me the long order number from the text message your son received? | Uh... um okay. Wait, let me find my magnifying glass... the letters are so small on this phone.
+OPTION_BAD (Lecture about ordering early): Lola, you shouldn't wait until the last pill to call us. Our delivery takes time, especially with the traffic here. | Aba! I'm asking for help, not a lecture! My son was the one who ordered it, not me!
+OPTION_NOANSWER (No response): Is anyone even there? My printer isn't working!
+
+NEW_CALL: Mrs. Higgins
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hello? Is this Mario's Pizza in Katipunan? I'd like to order one large Pepperoni and a bottle of Coke, please. Make sure the crust is thin, ha?
+OPTION_BEST (Help find correct number): Oh, I'm sorry, Lola; you've actually reached Khai Call Center. But wait, I can look up the number for Mario's Pizza for you so you can get your dinner! | Ay, susmariosep! Is this not the pizza place? I must have pressed the wrong button on my speed dial.
+OPTION_GOOD (Tell her wrong number): Ma'am, this is a technical support center, not a restaurant. You dialed the wrong number from your contact list. | Uh... um okay. But the voice sounds like the one I talked to last week. Are you sure you don't sell pizza?
+OPTION_BAD (Hang up immediately): (Silence) Wrong number, Ma'am. Paalam. (Click) | Hala! Why was that person so rude? I just wanted a pizza!
+OPTION_NOANSWER (No response): I guess no one's answering… how rude!
+
+NEW_CALL: Kevin
+DIFFICULTY: EASY
+CALL_DESCRIPTION: Hey! Is this the 24-hour locksmith in Makati? I'm locked out of my Vios here in the parking lot and I really need someone to help me open the door! Sobrang init na dito, bro!
+OPTION_BEST (Search for locksmith): Oh, sorry to hear that, bro; but you've actually reached Khai Call Center, not a locksmith. Let me do a quick search on my end for a nearby shop in Makati for you. | Hala, talaga? I just searched "Locksmith" on Google and clicked the first number. My bad, man.
+OPTION_GOOD (Tell him wrong number): You dialed the wrong number, man. This is a business process outsourcing office, we don't handle car locks. | Uh... um okay. I thought the "Khai" in your name stood for "Key" or something. Sorry about that.
+OPTION_BAD (Break the window): If it's that hot, just find a rock and break the window. It's faster than waiting for a locksmith. | Ano?! You want me to smash my own car window? Who even says that to a customer!
+OPTION_NOANSWER (No response): Hello? This is a waste of time—no answer!
+
+NEW_CALL: Anonymous
+DIFFICULTY: HARD
+CALL_DESCRIPTION: Hello? Is... is anyone there? I don't really have a problem with my account. I just... I've been working 12-hour shifts in another center and I feel like I'm breaking down. Hindi ko na kaya. I just needed to hear a human voice that isn't yelling at me.
+OPTION_BEST (Offer genuine support): I hear you, and I'm here. Take a deep breath. I know exactly how heavy those shifts can feel. You're not just a voice on the line to me—you're a person, and I'm listening. | Salamat. I was so scared the next person I talked to would just tell me to "clear my cache" or hang up because I'm not a customer.
+OPTION_GOOD (Stay professional): I understand that the BPO industry can be very demanding. Is there a specific technical issue I can help you with to make your day easier? | Uh... um okay. No, no technical issue. I guess I just called the wrong department. Sorry for bothering you.
+OPTION_BAD (Redirect to crisis line): This line is for Khai Global customers only. You should call a dedicated crisis line if you're having a breakdown; I have a queue to manage. | Grabe naman... even here, I'm just a number. (Hangs up crying).
+OPTION_NOANSWER (No response): Why is no one here? This is annoying!
+
+NEW_CALL: Ben
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: Hi, I'm trying to pay for my Coursera certificate for my OJT requirement, but the transaction keeps failing! My GCash was already deducted ₱2,800, but the website says "Payment Not Received." Sayang naman ang pera ko, that's my savings!
+OPTION_BEST (Check payment status): I know how stressful it is to see your savings disappear without a receipt. Let me check the real-time status of that ₱2,800 to see where it's hanging. | Salamat. I really need that certificate for my graduation credits. Please help me find the money.
+OPTION_GOOD (Wait 24 hours): Sometimes the system takes a while to talk to the bank. Can you wait 24 hours to see if the certificate appears automatically? | Uh... um okay. But the deadline for my OJT submission is tonight. Are you sure it will work?
+OPTION_BAD (Blame GCash): If the money left your GCash, that's a problem with their app, not our payment gateway. You should call their hotline instead. | Luh! Their hotline is just a bot! You guys are the ones who took the money! Why are you being like this?
+OPTION_NOANSWER (No response): Hello? No one's answering—what is going on?
+
+NEW_CALL: Officer Sarah
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: Good day. This is Officer Sarah from the PNP Anti-Cybercrime Group. We are tracking a series of illegal logins originating from your specific terminal. To clear your name, I need you to confirm your Employee ID and your Supervisor's full name immediately.
+OPTION_BEST (Verify official case number): I understand the seriousness of a cybercrime investigation, Officer. To comply with our security protocol, may I have your official case reference number and my local precinct's landline so my supervisor can verify this call? | Hay naku, we are in the middle of a live operation! If you delay this, you could be charged with obstruction of justice. Just give me the ID!
+OPTION_GOOD (Delay and verify logs): I see. Let me pull up my login history first to see if there are any errors. Can you stay on the line for a few minutes while I "verify" things on my end? | Uh... um okay. But don't take too long. Every second you waste, the "hacker" is getting closer to your bank details.
+OPTION_BAD (Give credentials out of fear): Oh, I'm so sorry, Officer! I didn't do anything wrong! My ID is KHAI-9921 and my supervisor is Mr. Fernando Poe. Please don't arrest me! | Good. Now, to "secure" your station, I'm sending a link to your phone. Click it and type your system password.
+OPTION_NOANSWER (No response): Why is no one responding to this call?!
+
+NEW_CALL: Child Prank
+DIFFICULTY: MEDIUM
+CALL_DESCRIPTION: (In a high-pitched, fake child's voice) Hello? Is... is your refrigerator running? My mommy says it's making a very loud noise like a monster! Rawr!
+OPTION_BEST (Play along professionally): Oh no, a monster in the fridge! That sounds scary. To help your mommy fix it, I just need to know if the light inside is still turning on. | (Stammers) Uh... wait. Yeah! The light is on. But you have to go catch it first! Because... because it's running! Get it?
+OPTION_GOOD (Ask for parent): I'm sorry to hear that. Can you please give the phone to your Mommy so I can ask her about the model number of the refrigerator? | Uh... um okay. She's... uh... she's in the shower! She said I should call the "smart people" to catch the fridge!
+OPTION_BAD (Call out the prank): Nice try, "kid." I know you're just a bored teenager. Stop wasting my time before I report this number for prank calling. | Luh! Why are you so serious? It's just a joke, bro. You're no fun at all.
+OPTION_NOANSWER (No response): Hello? Is anyone alive there?
