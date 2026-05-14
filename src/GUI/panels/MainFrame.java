@@ -57,7 +57,12 @@ public class MainFrame extends JFrame {
     public SavePanel getSavePanel() { return savePanel; }
     
     public void resetStats() {
+        System.out.println("=== RESETTING GAME ===");
         gameAPI.resetGame();
+        System.out.println("After reset - Day: " + gameAPI.getCurrentDay());
+        System.out.println("After reset - PP: " + gameAPI.getPP());
+        System.out.println("After reset - Segment: " + gameAPI.getCurrentSegment());
+        System.out.println("After reset - DialogueScene: " + gameAPI.getDialogueScene());
         ppAtShiftStart = 0;
         lpAtShiftStart = 0;
         salaryAtShiftStart = 0;
@@ -235,8 +240,6 @@ public class MainFrame extends JFrame {
         mainContainer.add(shopPanel, "shop");
         mainContainer.add(daySummary, "summary");
         mainContainer.add(savePanel, "save");
-        mainContainer.add(creditsPanel, "credits");
-
         
         inventory.setOnItemEffect((effectType, effectValue) -> {
             ItemUse itemUse = getCurrentItemUse();

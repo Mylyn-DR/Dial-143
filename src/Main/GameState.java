@@ -64,6 +64,8 @@ public class GameState {
         hintAvailable = false;
         playerProfile.set("", "", "");
         if (lpStorage != null) lpStorage.reset();  // ← Reset lpStorage
+        consumedChoices.clear();
+        endingType = EndingType.NEUTRAL;
     }
     
     // ==================== PLAYER IDENTITY ====================

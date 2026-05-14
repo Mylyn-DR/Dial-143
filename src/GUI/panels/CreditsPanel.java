@@ -31,7 +31,7 @@ public class CreditsPanel extends JPanel {
         { "Back-End Developer",        "Mylyn Del Rosario"      },
         { "Front-End Developer",     "Anne Gwyn Amaya"        },
         { "UI Artist", "Ravenelle Celeres"      },
-        { "Lead Writer",      "Andrea Cloma"    },
+        { "Lead Writer",      "Nicole Andrea Cloma"    },
         { "Backgrounds",    "min-chii, ???"      },
         { "Audios",       "???"      },
     };
