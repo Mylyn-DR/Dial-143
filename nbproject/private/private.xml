@@ -3,30 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/CeleresRoute/Day3Celeres.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/CeleresRoute/Day4Celeres.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/CeleresRoute/Day5Celeres.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/CeleresRoute/Day6Celeres.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/CeleresRoute/Day7Celeres.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/ChoiceEntry.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/GUI/panels/saveComponents/SaveDisplayLayer.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/GUI/panels/saveComponents/SaveSlot.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Entities/Character.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/GUI/panels/inventoryComponents/ItemLayer.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/GUI/panels/InteractionPanel.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/RouteManager.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/RosarioRoute/Day6Rosario.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Entities/Item.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Entities/ItemUse.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/AmayaRoute/AmayaRoute.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/CeleresRoute/CeleresRoute.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/ClomaRoute/ClomaRoute.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/RosarioRoute/Day3Rosario.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/RosarioRoute/RosarioRoute.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/Day1.java</file>
+            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Main/SaveManager.java</file>
+            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Main/GameState.java</file>
             <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/SceneManager.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/SceneEntry.java</file>
-            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/Storyline/AmayaRoute/Day6Amaya.java</file>
+            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/GUI/panels/InteractionPanel.java</file>
+            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/GUI/panels/dialogueComponents/IdentityCreationLayer.java</file>
+            <file>file:/D:/MYLYN/Code/Java/2026/Dial143%20-%20Temp%202/src/GUI/panels/ShopPanel.java</file>
         </group>
     </open-files>
 </project-private>

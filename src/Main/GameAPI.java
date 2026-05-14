@@ -150,7 +150,7 @@ public class GameAPI {
     }
     
     public Segment getCurrentSegment(){ return Segment.fromString(gameState.getCurrentSegment());}
-    public void setCurrentSegment(Segment segment) { gameState.setCurrentSegment(segment.name());}
+    public void setCurrentSegment(Segment segment) {gameState.setCurrentSegment(segment.name());}
     
     // ==================== DIALOGUE PROGRESS ====================
     public int getDialogueScene() { return gameState.getDialogueScene(); }
@@ -277,4 +277,6 @@ public class GameAPI {
     public boolean saveExists(int slot) {return saveManager.saveExists(slot);}
     public String getSaveInfo(int slot) {return saveManager.getSaveInfo(slot);}
     public void deleteSave(int slot) {saveManager.deleteSave(slot);}
+    
+    
 }

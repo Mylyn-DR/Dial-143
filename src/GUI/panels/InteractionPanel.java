@@ -281,17 +281,24 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         }
         // ─────────────────────────────────────────────────────────────────────
  
-        SceneManager.Segment seg = switch (gameAPI.getCurrentSegment()) {
-            case MORNING -> {  yield SceneManager.Segment.MORNING; }
-            case AFTERNOON -> { yield SceneManager.Segment.AFTERNOON; }
-            case EVENING -> {  yield SceneManager.Segment.EVENING; }
-            case ENDING -> { 
-                sceneManager.setActiveRoute(gameAPI.getActiveRoute()); 
-                yield SceneManager.Segment.ENDING; }
-        };
-        
-        sceneManager.start(seg, gameAPI.getDialogueScene());
+        sceneManager.start(
+            convertToSceneManagerSegment(gameAPI.getCurrentSegment()), 
+            gameAPI.getDialogueScene()
+        );
+       
     }
+    
+    private SceneManager.Segment convertToSceneManagerSegment(GameAPI.Segment seg) {
+    return switch (seg) {
+        case MORNING -> SceneManager.Segment.MORNING;
+        case AFTERNOON -> SceneManager.Segment.AFTERNOON;
+        case EVENING -> SceneManager.Segment.EVENING;
+        case ENDING -> {
+            sceneManager.setActiveRoute(gameAPI.getActiveRoute());
+            yield SceneManager.Segment.ENDING;
+        }
+    };
+}
     
     @Override
     public void onEndingComplete() {

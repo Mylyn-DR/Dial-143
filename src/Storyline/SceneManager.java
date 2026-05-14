@@ -61,17 +61,6 @@ public class SceneManager {
         this.activeRoute = rm;
     }
 
-    public void start(Segment segment, int startIndex) {
-        // SYNC: Write to GameState
-        gameAPI.setCurrentSegment(convertSegment(segment));
-        gameAPI.setDialogueScene(startIndex);
-        
-        // Clear any pending sub-scenes from previous session
-        subSceneQueue.clear();
-        delegate.waitForPreload();
-        loadScene(startIndex);
-    }
-
     public void advanceScene() {
         if (!subSceneQueue.isEmpty()) {
             playEntry(subSceneQueue.poll());
@@ -234,5 +223,15 @@ public class SceneManager {
             case EVENING -> GameAPI.Segment.EVENING;
             case ENDING -> GameAPI.Segment.ENDING;
         };
+    }
+    
+    public void setActiveRoute(RouteManager route) {this.activeRoute = route;}
+    public void start(Segment segment, int startIndex) {
+        gameAPI.setCurrentSegment(convertSegment(segment));
+        gameAPI.setDialogueScene(startIndex);
+
+        subSceneQueue.clear();
+        delegate.waitForPreload();
+        loadScene(startIndex);
     }
 }

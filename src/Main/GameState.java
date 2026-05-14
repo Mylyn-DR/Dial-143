@@ -87,28 +87,14 @@ public class GameState {
     
     // ==================== LP STORAGE (delegates to lpStorage) ====================
     public RouteManager getLpStorage() { return lpStorage; }
-    
-    // LP for a specific character
-    public int getLPForCharacter(String character) {
-        return lpStorage.getLPForCharacter(character);
-    }
-    
+    public int getLPForCharacter(String character) {return lpStorage.getLPForCharacter(character);}
     public void setLPForCharacter(String character, int value) {
         int current = lpStorage.getLPForCharacter(character);
         int diff = value - current;
         if (diff != 0) lpStorage.addCharacterLP(character, diff);
     }
-    
-    public void addLPForCharacter(String character, int amount) {
-        lpStorage.addCharacterLP(character, amount);
-    }
-    
-    // Active route LP
-    public int getLP() {
-        if (hasActiveRoute()) return lpStorage.getActiveLP();
-        return 0;
-    }
-    
+    public void addLPForCharacter(String character, int amount) {lpStorage.addCharacterLP(character, amount);}
+    public int getLP() {if (hasActiveRoute()) return lpStorage.getActiveLP();return 0;}
     public void setLP(int v) {
         if (hasActiveRoute()) {
             String activeChar = lpStorage.getActiveCharacter();
@@ -116,31 +102,11 @@ public class GameState {
             if (diff != 0) lpStorage.addCharacterLP(activeChar, diff);
         }
     }
-    
-    public void addLP(int amount) {
-        if (hasActiveRoute()) {
-            lpStorage.addCharacterLP(lpStorage.getActiveCharacter(), amount);
-        }
-    }
-    
-    public void addLPToActive(int amount) {
-        if (activeCharacter != null) {
-            lpStorage.addCharacterLP(activeCharacter, amount);
-        }
-    }
-    
-    public int getActiveLP() {
-        return lpStorage.getActiveLP();
-    }
-    
-    // Route unlock checks
-    public boolean isRouteUnlocked(String character) {
-        return lpStorage.isRouteUnlocked(character);
-    }
-    
-    public boolean allRoutesLocked() {
-        return lpStorage.allRoutesLocked();
-    }
+    public void addLP(int amount) {if (hasActiveRoute())lpStorage.addCharacterLP(lpStorage.getActiveCharacter(), amount);}
+    public void addLPToActive(int amount) {if (activeCharacter != null)lpStorage.addCharacterLP(activeCharacter, amount);}
+    public int getActiveLP() {return lpStorage.getActiveLP();}
+    public boolean isRouteUnlocked(String character) {return lpStorage.isRouteUnlocked(character);}
+    public boolean allRoutesLocked() {return lpStorage.allRoutesLocked();}
     
     // ==================== DAY / CALL PROGRESS ====================
     public String getCurrentDayScript() { return currentDayScript; }
