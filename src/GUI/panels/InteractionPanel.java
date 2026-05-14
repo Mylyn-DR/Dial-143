@@ -19,7 +19,7 @@ import java.awt.event.*;
 public class InteractionPanel extends JPanel implements SceneManager.SceneManagerDelegate {
  
     private GameAPI               gameAPI;
-    private MainFrame             mainFrame;
+    private MainFrame             mainFrame;  // Keep for screen navigation only
     private BackgroundLayer       bg;
     private SpriteLayer           sprite;
     private DialogueBoxLayer      dialogueBox;
@@ -38,14 +38,23 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
     private Thread       bgThread;
     private SceneManager sceneManager;
  
-    public InteractionPanel(MainFrame mainFrame, GameAPI gameAPI, SettingsPanel sharedSettings, InventoryPanel inventory) {
-        this.mainFrame = mainFrame;
+    public InteractionPanel(GameAPI gameAPI, MainFrame mainFrame, SettingsPanel sharedSettings, InventoryPanel inventory) {
         this.gameAPI = gameAPI;
+        this.mainFrame = mainFrame;
         this.settings  = sharedSettings;
         this.inventory = inventory;
         initComponents();
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
+        setLayout(new javax.swing.OverlayLayout(this));
         initializeLayers();
-        sceneManager = new SceneManager(gameAPI, new Day1(), this, gameAPI.getActiveRoute(), gameAPI.getLpStorage());
+        sceneManager = new SceneManager(gameAPI, new Day1(), this, 
+                                        gameAPI.getActiveRoute(), 
+                                        gameAPI.getLpStorage());
     }
  
     public ItemUse getItemUse() { 
@@ -207,11 +216,15 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
 
         if (lpCharacter != null) {
             int before = lp.getLPForCharacter(lpCharacter);
-            lp.addCharacterLP(lpCharacter, amount);  // ← ONLY ONE ADDITION
+            lp.addCharacterLP(lpCharacter, amount);
             int after = lp.getLPForCharacter(lpCharacter);
             System.out.println("DEBUG: LP for " + lpCharacter + " changed from " + before + " to " + after);
-        } else if (lp.hasActiveRoute()) {
-            lp.addCharacterLP(lp.getActiveCharacter(), amount);
+            // Update UI if this is the active character
+            if (lpCharacter.equals(gameAPI.getActiveCharacter())) {
+                uiComponents.addLpPoints(amount);
+            }
+        } else if (gameAPI.hasActiveRoute()) {
+            lp.addCharacterLP(gameAPI.getActiveCharacter(), amount);
             uiComponents.addLpPoints(amount);
         }
     }
@@ -221,7 +234,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         dialogueAdvanceLock = false;
         dialogueBox.onSceneEnd();
         saveStats();
-        mainFrame.onMorningComplete();
+        mainFrame.onMorningComplete();  // Keep - screen navigation
     }
  
     @Override
@@ -229,7 +242,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         dialogueAdvanceLock = false;
         dialogueBox.onSceneEnd();
         saveStats();
-        mainFrame.onAfternoonComplete();
+        mainFrame.onAfternoonComplete();  // Keep - screen navigation
     }
     
     @Override
@@ -237,7 +250,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         dialogueAdvanceLock = false;
         dialogueBox.onSceneEnd();
         saveStats();
-        mainFrame.onEveningComplete();
+        mainFrame.onEveningComplete();  // Keep - screen navigation
     }
  
     @Override
@@ -252,10 +265,17 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         uiComponents.setPpValue(gameAPI.getPP());
         uiComponents.setSalaryValue(gameAPI.getSalary());
         
-        RouteManager rm = gameAPI.getLpStorage();
-        int currentLP = rm.hasActiveRoute() ? rm.getActiveLP() : 0;
+        // Get LP from GameAPI using active character
+        int currentLP = 0;
+        if (gameAPI.hasActiveRoute()) {
+            String activeChar = gameAPI.getActiveCharacter();
+            currentLP = gameAPI.getLPForCharacter(activeChar);
+            System.out.println("loadContent - activeChar: " + activeChar + ", LP: " + currentLP);
+        } else {
+            System.out.println("loadContent - No active route");
+        }
         uiComponents.setLpValue(currentLP);
-        uiComponents.updateDayLabel(gameAPI.getCurrentDay(), gameAPI.getCurrentSegment());;
+        uiComponents.updateDayLabel(gameAPI.getCurrentDay(), gameAPI.getCurrentSegment());
  
         // ── Audio ─────────────────────────────────────────────────────────────
         AudioPlayer audio = AudioPlayer.getInstance();
@@ -276,8 +296,9 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
                     case BAD -> AudioPlayer.Track.BAD_ENDING;
                     case NEUTRAL -> AudioPlayer.Track.NEUTRAL_ENDING;
                 };
-                AudioPlayer.getInstance().crossfadeTo(track, 1200);
+                audio.crossfadeTo(track, 1200);
             }
+            default -> {}
         }
         // ─────────────────────────────────────────────────────────────────────
  
@@ -285,24 +306,23 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
             convertToSceneManagerSegment(gameAPI.getCurrentSegment()), 
             gameAPI.getDialogueScene()
         );
-       
     }
     
     private SceneManager.Segment convertToSceneManagerSegment(GameAPI.Segment seg) {
-    return switch (seg) {
-        case MORNING -> SceneManager.Segment.MORNING;
-        case AFTERNOON -> SceneManager.Segment.AFTERNOON;
-        case EVENING -> SceneManager.Segment.EVENING;
-        case ENDING -> {
-            sceneManager.setActiveRoute(gameAPI.getActiveRoute());
-            yield SceneManager.Segment.ENDING;
-        }
-    };
-}
+        return switch (seg) {
+            case MORNING -> SceneManager.Segment.MORNING;
+            case AFTERNOON -> SceneManager.Segment.AFTERNOON;
+            case EVENING -> SceneManager.Segment.EVENING;
+            case ENDING -> {
+                sceneManager.setActiveRoute(gameAPI.getActiveRoute());
+                yield SceneManager.Segment.ENDING;
+            }
+        };
+    }
     
     @Override
     public void onEndingComplete() {
-        mainFrame.onGameComplete();
+        mainFrame.onGameComplete();  // Keep - screen navigation
     }
     
     public void setDayScript(DayInterface script) { 
@@ -319,7 +339,6 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         if ("none".equals(characterId)) {
             System.out.println("  Player chose to walk alone — BAD ENDING");
 
-            // Play the walk alone ending scene
             ChoiceEntry walkAloneEnding = new ChoiceEntry("No one", 0, 0,
                 SceneEntry.dialogue("{name}", "No. I shouldn't be crushing on anyone.", "none", "StreetEvening.jpg"),
                 SceneEntry.dialogue("{name}", "Focus. That's all that matters.", "none", "StreetEvening.jpg"),
@@ -331,7 +350,6 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
 
             sceneManager.onChoicePicked(walkAloneEnding);
 
-            // After the ending, restart the game
             Timer restartTimer = new Timer(4000, e -> {
                 mainFrame.onGameComplete();
             });
@@ -340,35 +358,25 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
             return;
         }
 
-        // Get the chosen route (AmayaRoute, CeleresRoute, etc.)
         RouteManager chosenRoute = routeForCharacter(characterId);
         gameAPI.setActiveRoute(characterId);
         DayInterface dayScript = chosenRoute.getDayScript(3);
-        int accLP = gameAPI.getLpStorage().getLPForCharacter(characterId);
-        // Update UI
+        int accLP = gameAPI.getLPForCharacter(characterId);
+        
         uiComponents.setLpValue(accLP);
         uiComponents.updateLoveMeterVisibility(gameAPI.getCurrentDay(), GameAPI.Segment.EVENING);
 
-        // Load the Day 3 evening scenes for this route
         sceneManager.setDayScript(dayScript);
         sceneManager.start(SceneManager.Segment.EVENING, 0);
     }
  
     private RouteManager routeForCharacter(String name) {
         return switch (name) {
-            case Character.AMAYA -> {
-                yield new AmayaRoute();
-            }
-            case Character.CELERES -> {
-                yield new CeleresRoute();
-            }
-            case Character.CLOMA -> {
-                yield new ClomaRoute();
-            }
-            case Character.ROSARIO -> {
-                yield new RosarioRoute();
-            }
-            default -> { yield null; }
+            case Character.AMAYA -> new AmayaRoute();
+            case Character.CELERES -> new CeleresRoute();
+            case Character.CLOMA -> new ClomaRoute();
+            case Character.ROSARIO -> new RosarioRoute();
+            default -> null;
         };
     }
  
@@ -385,16 +393,11 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
             objective  = p.length > 2 ? p[2] : "them";
         }
         
-        String resolved = text
+        return text
             .replace("{name}",               name != null ? name : "")
             .replace("{pronoun_subject}",    subject)
             .replace("{pronoun_possessive}", possessive)
             .replace("{pronoun_objective}",  objective);
-            
-        if (resolved.contains("{name}") || resolved.contains("{pronoun_")) {
-        }
-        
-        return resolved;
     }
  
     private void saveStats() {
@@ -405,17 +408,16 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
     private void initializeLayers() {
         bg          = new BackgroundLayer();
         sprite      = new SpriteLayer();
-        dialogueBox = new DialogueBoxLayer(gameAPI);
+        dialogueBox = new DialogueBoxLayer(gameAPI);  // ← Pass GameAPI
  
         itemUse = new ItemUse(gameAPI, uiComponents, null);
         dialogueBox.setOnAdvanceRequest(() -> {
             if (!choices.isVisible() && !showingIdentityCreation && !dialogueAdvanceLock) {
                 sceneManager.advanceScene();
-            } else if (dialogueAdvanceLock) {
             }
         });
  
-        uiComponents = new TopBarComponents();
+        uiComponents = new TopBarComponents(gameAPI);  // ← Pass GameAPI
         uiComponents.setSettingsPanel(settings);
         uiComponents.setParentScreen("dialogue");
         uiComponents.setInventoryPanel(inventory);
@@ -423,7 +425,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
             requestFocusInWindow();
         });
  
-        identityPopup = new IdentityCreationLayer(mainFrame, gameAPI);
+        identityPopup = new IdentityCreationLayer(gameAPI);  // ← Pass GameAPI
         choices       = new ChoiceButtonLayer();
         
         add(choices);
@@ -463,26 +465,25 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
  
         bgThread = new Thread(() -> {
             bg.preload("MorningOffice.jpg",     "EveningOffice.jpg",    "BuildingEvening.jpg",
-                       "BuildingMorning.jpg",   "ConvenienceStore.jpg", "EventStage.jpg",
-                       "StreetMorning.jpg",     "StreetEvening.jpg",    "MorningElevator.jpg",
-                       "BreakRoom.jpg",         "blackBG.jpg",
-                       "AMAYA_GOOD.png",        "AMAYA_NEUTRAL.png",    "AMAYA_BAD.png",
-                       "CELERES_GOOD.png",      "CELERES_NEUTRAL.png",  "CELERES_BAD.png",
-                       "CLOMA_GOOD.png",        "CLOMA_NEUTRAL.png",    "CLOMA_BAD.png",
-                       "ROSARIO_GOOD.png",      "ROSARIO_NEUTRAL.png",  "ROSARIO_BAD.png",
-                       "Bedroom.jpg",           "EventStage.jpg",       "ITDepartment.jpg",
-                       "IntRestaurant.jpg",     "ParkingNIght.jpg",     "ExtRestaurant.jpg",
-                       "ParkingArea.jpg",       "StreetEvening_Rain.jpg", "INT_CAR.jpg",
-                       "Alley.jpg",             "ParkMorning.jpg"
-                       );
-            System.out.println("  Background preload complete");
+                        "BuildingMorning.jpg",   "ConvenienceStore.jpg", "EventStage.jpg",
+                        "StreetMorning.jpg",     "StreetEvening.jpg",    "MorningElevator.jpg",
+                        "BreakRoom.jpg",         "blackBG.jpg",
+                        "AMAYA_GOOD.png",        "AMAYA_NEUTRAL.png",    "AMAYA_BAD.png",
+                        "CELERES_GOOD.png",      "CELERES_NEUTRAL.png",  "CELERES_BAD.png",
+                        "CLOMA_GOOD.png",        "CLOMA_NEUTRAL.png",    "CLOMA_BAD.png",
+                        "ROSARIO_GOOD.png",      "ROSARIO_NEUTRAL.png",  "ROSARIO_BAD.png",
+                        "Bedroom.jpg",           "EventStage.jpg",       "ITDepartment.jpg",
+                        "IntRestaurant.jpg",     "ParkingNIght.jpg",     "ExtRestaurant.jpg",
+                        "ParkingArea.jpg",       "StreetEvening_Rain.jpg", "INT_CAR.jpg",
+                        "Alley.jpg",             "ParkMorning.jpg"
+                        );
+             System.out.println("  Background preload complete");
         }, "bg-preload");
  
         spriteThread.setDaemon(true);
         bgThread.setDaemon(true);
         spriteThread.start();
         bgThread.start();
-        
     }
     
     @SuppressWarnings("unchecked")

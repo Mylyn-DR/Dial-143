@@ -15,19 +15,21 @@ public class ItemUse {
     private boolean hintAvailable = false;     
     
     public ItemUse(GameAPI gameAPI, TopBarComponents topBar, CallCreationTimer callBox) {
-        this.gameAPI= gameAPI;
+        this.gameAPI = gameAPI;
         this.topBar = topBar;
         this.callBox = callBox;
     }
     
     public void handleItemEffect(Item.EffectType effectType, int effectValue) {
+        
         switch (effectType) {
             case LP_FLAT:
-                if (gameAPI.getActiveRoute() != null) {
+                if (gameAPI.hasActiveRoute()) {
                     gameAPI.addLP(effectValue);
                     topBar.addLpPoints(effectValue);
                 } 
                 break;
+                
             case PP_MULTIPLIER:
                 ppMultiplierBonus += effectValue;
                 break;
@@ -37,12 +39,16 @@ public class ItemUse {
                 break;
                 
             case TIMER_BOOST:
-                callBox.applyTimerBoostToCurrentCall(effectValue);
+                if (callBox != null) {
+                    callBox.applyTimerBoostToCurrentCall(effectValue);
+                }
                 break;
                 
             case HINT_PER_CALL:
                 hintAvailable = true;
-                callBox.activateHint();
+                if (callBox != null) {
+                    callBox.activateHint();
+                }
                 break;
                 
             default:
@@ -62,21 +68,21 @@ public class ItemUse {
         return rawLP + bonus;
     }
     
-        public boolean hasPPMultiplier() {
-            return ppMultiplierBonus > 0;
-        }
+    public boolean hasPPMultiplier() {
+        return ppMultiplierBonus > 0;
+    }
 
-        public int getPPMultiplierBonus() {
-            return ppMultiplierBonus;
-        }
+    public int getPPMultiplierBonus() {
+        return ppMultiplierBonus;
+    }
 
-        public boolean hasLPMultiplier() {
-            return lpMultiplierDailyBonus > 0;
-        }
+    public boolean hasLPMultiplier() {
+        return lpMultiplierDailyBonus > 0;
+    }
 
-        public int getLPMultiplierBonus() {
-            return lpMultiplierDailyBonus;
-        }
+    public int getLPMultiplierBonus() {
+        return lpMultiplierDailyBonus;
+    }
 
     public boolean consumeHint() {
         if (!hintAvailable) return false;

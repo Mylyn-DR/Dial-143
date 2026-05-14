@@ -3,6 +3,8 @@ package Main;
 import Entities.Item;
 import Storyline.RouteManager;
 import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.prefs.Preferences;
 
 public class SaveManager {
@@ -31,6 +33,10 @@ public class SaveManager {
             writer.println(state.getDialogueScene());      // ← Scene index
             writer.println(state.getCurrentDayScript());   // ← Which day script ("Day1", "Day2", etc.)
             writer.println(state.isDialogueDone());
+            writer.println(state.getConsumedChoices().size());
+            for (String choiceId : state.getConsumedChoices()) {
+                writer.println(choiceId);
+            }
 
             // ===== PLAYER IDENTITY =====
             writer.println(state.getPlayerName());
@@ -104,7 +110,15 @@ public class SaveManager {
             int dialogueScene = Integer.parseInt(reader.readLine());
             String currentDayScript = reader.readLine();
             boolean dialogueDone = Boolean.parseBoolean(reader.readLine());
-
+            // Load consumed choices
+            int consumedSize = Integer.parseInt(reader.readLine());
+            Set<String> consumed = new HashSet<>();
+            for (int i = 0; i < consumedSize; i++) {
+                consumed.add(reader.readLine());
+            }
+            state.setConsumedChoices(consumed);
+            
+            
             // ===== PLAYER IDENTITY =====
             String playerName = reader.readLine();
             String playerGender = reader.readLine();
@@ -230,4 +244,5 @@ public class SaveManager {
     public long getSaveTime(int slot) {
         return prefs.getLong("slot_" + slot + "_time", 0);
     }
+    // Save consumed choices
 }

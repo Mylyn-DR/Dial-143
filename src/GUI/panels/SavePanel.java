@@ -1,14 +1,14 @@
 package GUI.panels;
-
+ 
 import GUI.panels.universalComponents.BackgroundLayer;
 import GUI.panels.saveComponents.SaveDisplayLayer;
 import Main.GameAPI;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
-
+ 
 public class SavePanel extends JPanel {
-
+ 
     private final GameAPI gameAPI;
     private BackgroundLayer bg;
     private SaveDisplayLayer saveLayer;
@@ -20,28 +20,27 @@ public class SavePanel extends JPanel {
         setLayout(new OverlayLayout(this));
         initializeLayers();
     }
-
-    public void loadSave(String returnScreen, Runnable onBack) {
+ 
+    public void loadSave(String returnScreen, Runnable onLoad, Runnable onBack) {
         this.returnScreen = returnScreen;
+        saveLayer.setOnLoad(onLoad);
         saveLayer.setOnBack(onBack);
         saveLayer.refresh();
     }
-
+ 
     private void initializeLayers() {
         bg = new BackgroundLayer();
         bg.setBackgroundFromFile("lightBG.jpg");
-
+ 
         saveLayer = new SaveDisplayLayer(gameAPI);
-
+ 
         add(saveLayer);
         add(bg);
     }
-    // ── Size overrides ────────────────────────────────────────────────────────
  
     @Override public Dimension getMinimumSize()   { return new Dimension(1280, 720); }
     @Override public Dimension getMaximumSize()   { return new Dimension(1280, 720); }
     @Override public Dimension getPreferredSize() { return new Dimension(1280, 720); }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -94,7 +94,10 @@ public class MainFrame extends JFrame {
     public void showSave(String returnScreen) {
         transitionLayer.fadeOut(() -> {
             cardLayout.show(mainContainer, "save");
-            savePanel.loadSave(returnScreen, () -> showScreen(returnScreen));  // Pass callback
+            savePanel.loadSave(returnScreen, 
+                () -> showScreen("dialogue"),  // onLoad - after loading
+                () -> showScreen(returnScreen)  // onBack - just go back
+            );
             transitionLayer.fadeIn();
         });
     }
@@ -118,15 +121,16 @@ public class MainFrame extends JFrame {
         }
         
         // SPECIAL CASE: Day 6 afternoon (company event)
-//        if (gameAPI.getCurrentDay() == 6 && gameAPI.hasActiveRoute()) {
-//            DayInterface sharedAfternoon = day6;
-//            gameAPI.setCurrentSegment(GameAPI.Segment.AFTERNOON);
-//            gameAPI.setDialogueScene(0);
-//            gameAPI.setDialogueDone(false);
-//            dialoguePanel.setDayScript(sharedAfternoon);
-//            showScreen("dialogue");
-//            return;
-//        }
+        if (gameAPI.getCurrentDay() == 6 && gameAPI.hasActiveRoute()) {
+            DayInterface sharedAfternoon = day6;
+            day6.setPlayerPP(gameAPI.getPP());
+            gameAPI.setCurrentSegment(GameAPI.Segment.AFTERNOON);
+            gameAPI.setDialogueScene(0);
+            gameAPI.setDialogueDone(false);
+            dialoguePanel.setDayScript(sharedAfternoon);
+            showScreen("dialogue");
+            return;
+        }
         
         // Check for afternoon scenes
         DayInterface todayScript = gameAPI.scriptForDay(gameAPI.getCurrentDay());
@@ -212,23 +216,27 @@ public class MainFrame extends JFrame {
     private void panelObjects() {
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
-        
+
         titlePanel = new TitleScreenPanel(this);
         settingsPanel = new SettingsPanel(this);
         inventory = new InventoryPanel(this);
-        dialoguePanel = new InteractionPanel(this, gameAPI, settingsPanel, inventory);
-        shiftPanel = new ShiftPanel(this, gameAPI, settingsPanel, inventory);
-        shopPanel = new ShopPanel(this, gameAPI, settingsPanel, inventory);
+
+        // Pass GameAPI to all panels that need it
+        dialoguePanel = new InteractionPanel(gameAPI, this, settingsPanel, inventory);
+        shiftPanel = new ShiftPanel(gameAPI, this, settingsPanel, inventory);
+        shopPanel = new ShopPanel(gameAPI, this, settingsPanel, inventory);
         daySummary = new DaySummaryPanel(gameAPI, settingsPanel, inventory);
         savePanel = new SavePanel(gameAPI);
         creditsPanel = new CreditsPanel(this);
-        
+
         mainContainer.add(titlePanel, "title");
         mainContainer.add(dialoguePanel, "dialogue");
         mainContainer.add(shiftPanel, "shift");
         mainContainer.add(shopPanel, "shop");
         mainContainer.add(daySummary, "summary");
         mainContainer.add(savePanel, "save");
+        mainContainer.add(creditsPanel, "credits");
+
         
         inventory.setOnItemEffect((effectType, effectValue) -> {
             ItemUse itemUse = getCurrentItemUse();

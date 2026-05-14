@@ -220,4 +220,25 @@ public class GameState {
         int bonus = Math.round(rawPP * ppMultiplierBonus / 100f);
         return rawPP + bonus;
     }
+    
+    //
+    private Set<String> consumedChoices = new HashSet<>();
+
+public boolean isChoiceConsumed(String choiceId) {
+    return consumedChoices.contains(choiceId);
+}
+
+public void consumeChoice(String choiceId) {
+    if (choiceId != null && !choiceId.isEmpty()) {
+        consumedChoices.add(choiceId);
+    }
+}
+
+public Set<String> getConsumedChoices() {
+    return new HashSet<>(consumedChoices);
+}
+
+public void setConsumedChoices(Set<String> choices) {
+    this.consumedChoices = new HashSet<>(choices);
+}
 }

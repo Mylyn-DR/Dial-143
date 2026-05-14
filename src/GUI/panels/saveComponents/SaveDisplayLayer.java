@@ -1,18 +1,15 @@
 package GUI.panels.saveComponents;
 
-import GUI.panels.MainFrame;
 import Main.GameAPI;
-import Storyline.RouteManager;
-import Entities.Character;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.prefs.Preferences;
 
 public class SaveDisplayLayer extends JPanel {
 
     private final GameAPI gameAPI;
     private Runnable onBack;
+    private Runnable onLoad;
 
     private static final int SLOT_COUNT = 6;
 
@@ -52,9 +49,8 @@ public class SaveDisplayLayer extends JPanel {
         buildUI();
     }
 
-    // ── Public API ────────────────────────────────────────────────────────────
-
     public void setOnBack(Runnable callback) { this.onBack = callback; }
+    public void setOnLoad(Runnable callback) { this.onLoad = callback; }
 
     public void refresh() {
         for (int i = 0; i < SLOT_COUNT; i++) {
@@ -72,7 +68,6 @@ public class SaveDisplayLayer extends JPanel {
     private void buildUI() {
         setBackground(BG_CARD);
         
-        // ── Header ────────────────────────────────────────────────────────────
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
         header.setPreferredSize(new Dimension(0, 80));
@@ -94,7 +89,6 @@ public class SaveDisplayLayer extends JPanel {
         header.add(titleLbl, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
-        // ── Slots ─────────────────────────────────────────────────────────────
         slotsContainer = new JPanel();
         slotsContainer.setOpaque(false);
         slotsContainer.setLayout(new BoxLayout(slotsContainer, BoxLayout.Y_AXIS));
@@ -115,7 +109,6 @@ public class SaveDisplayLayer extends JPanel {
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         add(scroll, BorderLayout.CENTER);
 
-        // ── Footer ────────────────────────────────────────────────────────────
         JPanel footer = new JPanel(new BorderLayout());
         footer.setOpaque(false);
         footer.setPreferredSize(new Dimension(0, 90));
@@ -215,7 +208,7 @@ public class SaveDisplayLayer extends JPanel {
         if (value != null && value instanceof Integer) {
             int r = (Integer) value;
             if (r == JOptionPane.YES_OPTION) { 
-                gameAPI.saveGame(slot);  // ← Use GameAPI
+                gameAPI.saveGame(slot);
                 refresh(); 
             }
         }
@@ -235,10 +228,9 @@ public class SaveDisplayLayer extends JPanel {
         if (value != null && value instanceof Integer) {
             int r = (Integer) value;
             if (r == JOptionPane.YES_OPTION) {
-                boolean success = gameAPI.loadGame(slot);  // ← Use GameAPI
+                boolean success = gameAPI.loadGame(slot);
                 if (success) {
-                    // After loading, go back to dialogue screen
-                    if (onBack != null) onBack.run();
+                    if (onLoad != null) onLoad.run();
                 } else {
                     JOptionPane.showMessageDialog(this, 
                         "Failed to load save file!", 
@@ -263,7 +255,7 @@ public class SaveDisplayLayer extends JPanel {
         if (value != null && value instanceof Integer) {
             int r = (Integer) value;
             if (r == JOptionPane.YES_OPTION) { 
-                gameAPI.deleteSave(slot);  // ← Use GameAPI
+                gameAPI.deleteSave(slot);
                 refresh(); 
             }
         }
@@ -280,7 +272,6 @@ public class SaveDisplayLayer extends JPanel {
         }
     }
 
-    // ── Button factory ────────────────────────────────────────────────────────
     private JButton buildBtn(String text, Color bgColor, Color fgColor, int w, int h) {
         JButton btn = new JButton(text) {
             private boolean hov = false;
@@ -326,8 +317,6 @@ public class SaveDisplayLayer extends JPanel {
         return btn;
     }
 
-    // ── Fonts ─────────────────────────────────────────────────────────────────
-
     private void loadFonts() {
         try {
             java.io.InputStream s = getClass().getResourceAsStream(
@@ -349,8 +338,6 @@ public class SaveDisplayLayer extends JPanel {
             subFont   = new Font("Georgia", Font.PLAIN, 12);
         }
     }
-
-    // ── Size overrides ────────────────────────────────────────────────────────
 
     @Override public Dimension getMinimumSize()   { return new Dimension(1280, 720); }
     @Override public Dimension getMaximumSize()   { return new Dimension(1280, 720); }

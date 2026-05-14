@@ -1,6 +1,5 @@
 package GUI.panels.dialogueComponents;
 
-import GUI.panels.MainFrame;
 import Main.GameAPI;
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +10,7 @@ import javax.imageio.ImageIO;
 
 public class IdentityCreationLayer extends JPanel {
 
-    private final MainFrame mainFrame;
-    private final GameAPI gameAPI; 
+    private final GameAPI gameAPI;  // ← Changed from MainFrame to GameAPI
     private JDialog  dialog;
     private Runnable onComplete;
 
@@ -51,8 +49,7 @@ public class IdentityCreationLayer extends JPanel {
     private ImageIcon iconMale;
     private ImageIcon iconFemale;
 
-    public IdentityCreationLayer(MainFrame mainFrame, GameAPI gameAPI) {
-        this.mainFrame = mainFrame;
+    public IdentityCreationLayer(GameAPI gameAPI) {  // ← Changed to GameAPI
         this.gameAPI = gameAPI;
         loadFonts();
         preloadAvatarIcons();
@@ -61,17 +58,19 @@ public class IdentityCreationLayer extends JPanel {
         buildUI();
     }
     
-       public void setOnComplete(Runnable callback) {
+    public void setOnComplete(Runnable callback) {
         this.onComplete = callback;
     }
 
     public void showAsPopup() {
-        dialog = new JDialog(mainFrame, "Employee Identity", Dialog.ModalityType.APPLICATION_MODAL);
+        // Need a parent window - use SwingUtilities to get window
+        Window parent = SwingUtilities.getWindowAncestor(this);
+        dialog = new JDialog(parent, "Employee Identity", Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setUndecorated(true);
 
         JPanel backdrop = new JPanel(new GridBagLayout()) {
             @Override protected void paintComponent(Graphics g) {
-
+                // Empty - transparent background
             }
         };
         backdrop.setOpaque(false);
@@ -80,7 +79,7 @@ public class IdentityCreationLayer extends JPanel {
 
         dialog.setContentPane(backdrop);
         dialog.pack();
-        dialog.setLocationRelativeTo(mainFrame);
+        dialog.setLocationRelativeTo(parent);
         dialog.setAlwaysOnTop(true);
         dialog.setVisible(true); 
     }
@@ -140,7 +139,6 @@ public class IdentityCreationLayer extends JPanel {
     }
 
     private void buildUI() {
-
         JPanel card = new JPanel(new BorderLayout(0, 0)) {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -170,7 +168,7 @@ public class IdentityCreationLayer extends JPanel {
                 g2.dispose();
             }
         };
-    card.setOpaque(false);
+        card.setOpaque(false);
 
         JPanel headerPanel = new JPanel(new GridBagLayout());
         headerPanel.setOpaque(false);
@@ -308,7 +306,6 @@ public class IdentityCreationLayer extends JPanel {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                // Clear first
                 g2.setComposite(AlphaComposite.Clear);
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setComposite(AlphaComposite.SrcOver);
@@ -372,94 +369,93 @@ public class IdentityCreationLayer extends JPanel {
         return btn;
     }
 
-    // ── Confirm logic ─────────────────────────────────────────────────────────
-private void confirmIdentity() {
-    playerName = nameField.getText().trim();
+    private void confirmIdentity() {
+        playerName = nameField.getText().trim();
 
-    if (playerName.isEmpty()) {
-        shakeField(nameField);
-        return;
-    }
-    if (playerGender.isEmpty()) {
-        shakeField(maleBtn);
-        return;
-    }
+        if (playerName.isEmpty()) {
+            shakeField(nameField);
+            return;
+        }
+        if (playerGender.isEmpty()) {
+            shakeField(maleBtn);
+            return;
+        }
 
-    String pronounDisplay = playerGender.equals("FEMALE") ? "she/her" : "he/him";
+        String pronounDisplay = playerGender.equals("FEMALE") ? "she/her" : "he/him";
 
-    JPanel msg = new JPanel();
-    msg.setLayout(new BoxLayout(msg, BoxLayout.Y_AXIS));
-    msg.setOpaque(false);
-    msg.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        JPanel msg = new JPanel();
+        msg.setLayout(new BoxLayout(msg, BoxLayout.Y_AXIS));
+        msg.setOpaque(false);
+        msg.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
-    JLabel line1 = new JLabel("Are you sure? All changes made are final.", SwingConstants.CENTER);
-    line1.setFont(boldFont.deriveFont(14f));
-    line1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel line1 = new JLabel("Are you sure? All changes made are final.", SwingConstants.CENTER);
+        line1.setFont(boldFont.deriveFont(14f));
+        line1.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    JPanel summaryRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 4));
-    summaryRow.setOpaque(false);
+        JPanel summaryRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 4));
+        summaryRow.setOpaque(false);
 
-    JLabel lName = new JLabel(playerName);
-    lName.setFont(boldFont.deriveFont(13f));
-    lName.setForeground(new Color(30, 60, 120));
+        JLabel lName = new JLabel(playerName);
+        lName.setFont(boldFont.deriveFont(13f));
+        lName.setForeground(new Color(30, 60, 120));
 
-    JLabel sep1 = new JLabel("\u2022");
-    sep1.setForeground(new Color(160, 160, 160));
+        JLabel sep1 = new JLabel("\u2022");
+        sep1.setForeground(new Color(160, 160, 160));
 
-    JLabel lGender = new JLabel(playerGender);
-    lGender.setFont(boldFont.deriveFont(13f));
-    lGender.setForeground(playerGender.equals("FEMALE")
-        ? new Color(180, 60, 110) : new Color(50, 100, 180));
+        JLabel lGender = new JLabel(playerGender);
+        lGender.setFont(boldFont.deriveFont(13f));
+        lGender.setForeground(playerGender.equals("FEMALE")
+            ? new Color(180, 60, 110) : new Color(50, 100, 180));
 
-    JLabel sep2 = new JLabel("\u2022");
-    sep2.setForeground(new Color(160, 160, 160));
+        JLabel sep2 = new JLabel("\u2022");
+        sep2.setForeground(new Color(160, 160, 160));
 
-    JLabel lPronoun = new JLabel(pronounDisplay);
-    lPronoun.setFont(bodyFont.deriveFont(13f));
-    lPronoun.setForeground(new Color(80, 80, 100));
+        JLabel lPronoun = new JLabel(pronounDisplay);
+        lPronoun.setFont(bodyFont.deriveFont(13f));
+        lPronoun.setForeground(new Color(80, 80, 100));
 
-    summaryRow.add(lName);
-    summaryRow.add(sep1);
-    summaryRow.add(lGender);
-    summaryRow.add(sep2);
-    summaryRow.add(lPronoun);
+        summaryRow.add(lName);
+        summaryRow.add(sep1);
+        summaryRow.add(lGender);
+        summaryRow.add(sep2);
+        summaryRow.add(lPronoun);
 
-    msg.add(line1);
-    msg.add(Box.createVerticalStrut(6));
-    msg.add(summaryRow);
-    
-    JOptionPane pane = new JOptionPane(
-        msg,
-        JOptionPane.PLAIN_MESSAGE,
-        JOptionPane.YES_NO_OPTION
-    );
-    
-    JDialog dialog = pane.createDialog(this, "Confirm Identity");
-    makeButtonsNonFocusable(pane);
-    dialog.setVisible(true);
-    
-    Object value = pane.getValue();
-    if (value != null && value instanceof Integer) {
-        int result = (Integer) value;
-        if (result == JOptionPane.YES_OPTION) {
-            String pronoun = playerGender.equals("FEMALE") ? "she/her" : "he/him";
-            gameAPI.setPlayerIdentity(playerName, playerGender, pronoun);
-            hidePopup();
-            if (onComplete != null) onComplete.run();
+        msg.add(line1);
+        msg.add(Box.createVerticalStrut(6));
+        msg.add(summaryRow);
+        
+        JOptionPane pane = new JOptionPane(
+            msg,
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.YES_NO_OPTION
+        );
+        
+        JDialog dialog = pane.createDialog(this, "Confirm Identity");
+        makeButtonsNonFocusable(pane);
+        dialog.setVisible(true);
+        
+        Object value = pane.getValue();
+        if (value != null && value instanceof Integer) {
+            int result = (Integer) value;
+            if (result == JOptionPane.YES_OPTION) {
+                String pronoun = playerGender.equals("FEMALE") ? "she/her" : "he/him";
+                gameAPI.setPlayerIdentity(playerName, playerGender, pronoun);
+                hidePopup();
+                if (onComplete != null) onComplete.run();
+            }
         }
     }
-}
 
-private void makeButtonsNonFocusable(Container container) {
-    for (Component comp : container.getComponents()) {
-        if (comp instanceof AbstractButton) {
-            comp.setFocusable(false);
-        }
-        if (comp instanceof Container) {
-            makeButtonsNonFocusable((Container) comp);
+    private void makeButtonsNonFocusable(Container container) {
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof AbstractButton) {
+                comp.setFocusable(false);
+            }
+            if (comp instanceof Container) {
+                makeButtonsNonFocusable((Container) comp);
+            }
         }
     }
-}
 
     private void shakeField(JComponent comp) {
         Point origin = comp.getLocation();
@@ -472,8 +468,6 @@ private void makeButtonsNonFocusable(Container container) {
         });
         t.start();
     }
-
-    // ── Font loading ──────────────────────────────────────────────────────────
 
     private void loadFonts() {
         try {

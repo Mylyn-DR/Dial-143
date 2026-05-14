@@ -12,8 +12,8 @@ import java.awt.*;
  
 public class ShiftPanel extends JPanel {
  
-    private final MainFrame      mainFrame;
     private final GameAPI        gameAPI;
+    private final MainFrame      mainFrame;
     private final SettingsPanel  settings;
     private final InventoryPanel inventory;
     private BackgroundLayer      bg;
@@ -21,9 +21,9 @@ public class ShiftPanel extends JPanel {
     private TopBarComponents     topBar;
     private ItemUse              itemEffect;
 
-    public ShiftPanel(MainFrame mainFrame, GameAPI gameAPI, SettingsPanel sharedSettings, InventoryPanel inventory) {
-        this.mainFrame = mainFrame; 
+    public ShiftPanel(GameAPI gameAPI, MainFrame mainFrame, SettingsPanel sharedSettings, InventoryPanel inventory) {
         this.gameAPI = gameAPI;
+        this.mainFrame = mainFrame;
         this.settings  = sharedSettings;
         this.inventory = inventory;
         setPreferredSize(new Dimension(1280, 720));
@@ -36,7 +36,7 @@ public class ShiftPanel extends JPanel {
         bg.setBackgroundFromFile("MorningOffice.jpg");
  
         callBox = new CallCreationTimer(gameAPI);
-        topBar = new TopBarComponents();
+        topBar = new TopBarComponents(gameAPI);
         
         itemEffect = new ItemUse(gameAPI, topBar, callBox);
  
@@ -98,13 +98,20 @@ public class ShiftPanel extends JPanel {
     }
     
     public ItemUse getItemUse() {
-    return itemEffect;
-}
+        return itemEffect;
+    }
  
     public void loadCall() {
         topBar.updateForShift(gameAPI.getCurrentDay());
         topBar.setPpValue(gameAPI.getPP());
-        topBar.setLpValue(gameAPI.getLP());
+        
+        // Get LP from GameAPI using active character
+        int currentLP = 0;
+        if (gameAPI.hasActiveRoute()) {
+            String activeChar = gameAPI.getActiveCharacter();
+            currentLP = gameAPI.getLPForCharacter(activeChar);
+        }
+        topBar.setLpValue(currentLP);
         topBar.setSalaryValue(gameAPI.getSalary());
         callBox.resetRemainingCalls();
         callBox.loadTest();
@@ -116,15 +123,19 @@ public class ShiftPanel extends JPanel {
  
     private void saveStats() {
         gameAPI.setPP(topBar.getCurrentPpValue());
-        gameAPI.setLP(topBar.getCurrentLpValue());
         gameAPI.setSalary(topBar.getCurrentSalaryValue());
+        
+        // Save LP if active route exists
+        if (gameAPI.hasActiveRoute()) {
+            String activeChar = gameAPI.getActiveCharacter();
+            gameAPI.setLPForCharacter(activeChar, topBar.getCurrentLpValue());
+        }
     }
  
     public void pauseTimer()       { callBox.pauseTimer(); }
     public void resumeTimer()      { callBox.resumeTimer(); }
     public boolean isTimerPaused() { return callBox.isTimerPaused(); }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

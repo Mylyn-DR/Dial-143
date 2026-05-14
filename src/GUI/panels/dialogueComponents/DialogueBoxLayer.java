@@ -1,6 +1,5 @@
 package GUI.panels.dialogueComponents; 
 
-import GUI.panels.MainFrame;
 import Main.GameAPI;
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +28,7 @@ public class DialogueBoxLayer extends JPanel {
     private static final Color TEXT_COLOR = new Color(0, 0, 0, 255);
     private static final Color SPEAKER_TEXT_COLOR = new Color(0, 0, 0, 255);
 
-    public DialogueBoxLayer(GameAPI gameAPI) {
+    public DialogueBoxLayer(GameAPI gameAPI) {  // ← Changed to GameAPI
         this.gameAPI = gameAPI;
         setLayout(null);
         setOpaque(false);
@@ -42,8 +41,6 @@ public class DialogueBoxLayer extends JPanel {
         setupTransparency();
         disableTextHighlighting();
     }
-    
-    // ── Speed Up Methods ──────────────────────────────────────────────────────
     
     private void styleSpeedButton() {
         if (speedBtn != null) {

@@ -278,5 +278,11 @@ public class GameAPI {
     public String getSaveInfo(int slot) {return saveManager.getSaveInfo(slot);}
     public void deleteSave(int slot) {saveManager.deleteSave(slot);}
     
-    
+    public boolean isChoiceConsumed(String choiceId) {
+    return gameState.isChoiceConsumed(choiceId);
+}
+
+public void consumeChoice(String choiceId) {
+    gameState.consumeChoice(choiceId);
+}
 }

@@ -10,7 +10,7 @@ import javax.swing.OverlayLayout;
 
 public class DaySummaryPanel extends JPanel {
 
-    private final GameAPI gameAPI;
+    private final GameAPI       gameAPI;
     private final SettingsPanel settings;
     private final InventoryPanel inventory;
 
@@ -21,7 +21,7 @@ public class DaySummaryPanel extends JPanel {
 
 
     public ItemUse getItemUse() {
-            return itemUse;
+        return itemUse;
     }
     
     public DaySummaryPanel(GameAPI gameAPI, SettingsPanel sharedSettings, InventoryPanel inventory) {
@@ -36,7 +36,14 @@ public class DaySummaryPanel extends JPanel {
     public void loadSummary(int ppGained, int lpGained, int salaryGained,
                             int callsDone, Runnable onEndDay, Runnable onGoToShop) {
         topBar.setPpValue(gameAPI.getPP());
-        topBar.setLpValue(gameAPI.getLP());
+        
+        // Get LP from GameAPI using active character
+        int currentLP = 0;
+        if (gameAPI.hasActiveRoute()) {
+            String activeChar = gameAPI.getActiveCharacter();
+            currentLP = gameAPI.getLPForCharacter(activeChar);
+        }
+        topBar.setLpValue(currentLP);
         topBar.setSalaryValue(gameAPI.getSalary());
         topBar.setDayInfo(gameAPI.getCurrentDay(), "Day Summary");
         topBar.updateForSummary(gameAPI.getCurrentDay());
@@ -44,7 +51,7 @@ public class DaySummaryPanel extends JPanel {
         summaryLayer.load(
             gameAPI.getCurrentDay(),
             ppGained, lpGained, salaryGained, callsDone,
-            gameAPI.getPP(), gameAPI.getLP(), gameAPI.getSalary(),
+            gameAPI.getPP(), currentLP, gameAPI.getSalary(),
             onEndDay, onGoToShop
         );
     }
@@ -54,12 +61,11 @@ public class DaySummaryPanel extends JPanel {
         bg.setBackgroundFromFile("lightBG.jpg");
         itemUse = new ItemUse(gameAPI, topBar, null);
 
-        topBar = new TopBarComponents();
+        topBar = new TopBarComponents(gameAPI);
         topBar.setSettingsPanel(settings);
         topBar.setParentScreen("daySummary");
         topBar.setInventoryPanel(inventory);
         
-
         summaryLayer = new DaySummaryLayer();
 
         add(topBar);
