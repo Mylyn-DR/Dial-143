@@ -45,24 +45,24 @@ public class Day3Rosario implements DayInterface {
         SceneEntry.narrator("Before you can respond, he nods and walks away.", "StreetEvening.jpg"),
         SceneEntry.narrator("You remain there, trying to process everything.", "StreetEvening.jpg"),
         SceneEntry.choiceMarker("ROSARIO_DAY3_CHOICE_THIRD"),
-        SceneEntry.narrator("You collapse onto your bed as soon as you get home.", "INT_BEDROOM"),
-        SceneEntry.narrator("You replay everything that happened today.", "INT_BEDROOM"),
-        SceneEntry.narrator("But the image of Rosario and Amaya together…", "INT_BEDROOM"),
-        SceneEntry.narrator("It still bothers you.", "INT_BEDROOM"),
-        SceneEntry.narrator("But what Rosario did somehow makes up for everything.", "INT_BEDROOM"),
-        SceneEntry.narrator("And for some reason… you want more moments like that.", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "Too short…", "none", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "We should've talked more.", "none", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "Wait… what am I even saying?", "none", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "Sigh…", "none", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "Rosario can't just be a happy crush if it makes me jealous of my best friend.", "none", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "But he's admirable…", "none", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "As a leader… as a coworker…", "none", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "But as a person?", "none", "INT_BEDROOM"),
-        SceneEntry.dialogue("{name}", "He confuses me.", "none", "INT_BEDROOM"),
+        SceneEntry.narrator("You collapse onto your bed as soon as you get home.", "Bedroom.jpg"),
+        SceneEntry.narrator("You replay everything that happened today.", "Bedroom.jpg"),
+        SceneEntry.narrator("But the image of Rosario and Amaya together…", "Bedroom.jpg"),
+        SceneEntry.narrator("It still bothers you.", "Bedroom.jpg"),
+        SceneEntry.narrator("But what Rosario did somehow makes up for everything.", "Bedroom.jpg"),
+        SceneEntry.narrator("And for some reason… you want more moments like that.", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "Too short…", "none", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "We should've talked more.", "none", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "Wait… what am I even saying?", "none", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "Sigh…", "none", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "Rosario can't just be a happy crush if it makes me jealous of my best friend.", "none", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "But he's admirable…", "none", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "As a leader… as a coworker…", "none", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "But as a person?", "none", "Bedroom.jpg"),
+        SceneEntry.dialogue("{name}", "He confuses me.", "none", "Bedroom.jpg"),
         SceneEntry.choiceMarker("ROSAIRO_DAY3_CHOICE_FOURTH"),
-        SceneEntry.narrator("Exhaustion slowly pulls you to sleep.", "INT_BEDROOM"),
-        SceneEntry.narrator("The night comes to an end.", "INT_BEDROOM"),
+        SceneEntry.narrator("Exhaustion slowly pulls you to sleep.", "Bedroom.jpg"),
+        SceneEntry.narrator("The night comes to an end.", "Bedroom.jpg"),
     };
     
     // First choice - Run after them or not
@@ -130,12 +130,12 @@ public class Day3Rosario implements DayInterface {
     // Fourth choice - End of night reflection
     private static final ChoiceEntry[] CHOICES_FOURTH = {
         new ChoiceEntry("Focus on work", 0,5,
-            SceneEntry.dialogue("{name}", "I can't risk my job over a crush.", "none", "INT_BEDROOM"),
-            SceneEntry.dialogue("{name}", "I need to get over this.", "none", "INT_BEDROOM")
+            SceneEntry.dialogue("{name}", "I can't risk my job over a crush.", "none", "Bedroom.jpg"),
+            SceneEntry.dialogue("{name}", "I need to get over this.", "none", "Bedroom.jpg")
         ),
         new ChoiceEntry("Give yourself a chance", 2,0, Character.ROSARIO,
-            SceneEntry.dialogue("{name}", "Maybe it's too early to give up.", "none", "INT_BEDROOM"),
-            SceneEntry.dialogue("{name}", "Just wait, Rosario…", "none", "INT_BEDROOM")
+            SceneEntry.dialogue("{name}", "Maybe it's too early to give up.", "none", "Bedroom.jpg"),
+            SceneEntry.dialogue("{name}", "Just wait, Rosario…", "none", "Bedroom.jpg")
         ),
     };
     

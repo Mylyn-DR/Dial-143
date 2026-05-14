@@ -456,6 +456,9 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
             sprite.addSprite("Cloma_Blushing",   "Cloma_Blushing.png");
             sprite.addSprite("Khai_EyesClosed",  "Khai_EyesClosed.png");
             sprite.addSprite("Khai_EyesOpen",  "Khai_EyesOpen.png");
+            sprite.addSprite("CoworkerA",         "CoworkerA.png");
+            sprite.addSprite("CoworkerB",         "CoworkerB.png");
+            sprite.addSprite("CoworkerC",         "CoworkerC.png");
         }, "sprite-preload");
  
         bgThread = new Thread(() -> {
@@ -466,7 +469,11 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
                        "AMAYA_GOOD.png",        "AMAYA_NEUTRAL.png",    "AMAYA_BAD.png",
                        "CELERES_GOOD.png",      "CELERES_NEUTRAL.png",  "CELERES_BAD.png",
                        "CLOMA_GOOD.png",        "CLOMA_NEUTRAL.png",    "CLOMA_BAD.png",
-                       "ROSARIO_GOOD.png",      "ROSARIO_NEUTRAL.png",  "ROSARIO_BAD.png"
+                       "ROSARIO_GOOD.png",      "ROSARIO_NEUTRAL.png",  "ROSARIO_BAD.png",
+                       "Bedroom.jpg",           "EventStage.jpg",       "ITDepartment.jpg",
+                       "IntRestaurant.jpg",     "ParkingNIght.jpg",     "ExtRestaurant.jpg",
+                       "ParkingArea.jpg",       "StreetEvening_Rain.jpg", "INT_CAR.jpg",
+                       "Alley.jpg",             "ParkMorning.jpg"
                        );
             System.out.println("  Background preload complete");
         }, "bg-preload");

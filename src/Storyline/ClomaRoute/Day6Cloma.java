@@ -17,19 +17,19 @@ public class Day6Cloma implements DayInterface {
     };
 
     private static final SceneEntry[] EVENING = {
-        SceneEntry.narrator("After the awarding, everyone gathers for dinner.", "DINING"),
-        SceneEntry.narrator("You sit at a table with Amaya.", "DINING"),
-        SceneEntry.dialogue("Amaya", "Congrats again! We both got awards!", "single:Amaya_Smile", "DINING"),
-        SceneEntry.dialogue("{name}", "Thanks! You too.", "none", "DINING"),
-        SceneEntry.narrator("Suddenly, Miss Cloma approaches your table.", "DINING"),
-        SceneEntry.dialogue("Cloma", "Hello. Is anyone sitting next to you?", "single:Cloma_Smile", "DINING"),
-        SceneEntry.dialogue("{name}", "No… it's okay.", "none", "DINING"),
-        SceneEntry.dialogue("Cloma", "Mind if I join you?", "single:Cloma_Smile", "DINING"),
+        SceneEntry.narrator("After the awarding, everyone gathers for dinner.", "IntRestaurant.jpg"),
+        SceneEntry.narrator("You sit at a table with Amaya.", "IntRestaurant.jpg"),
+        SceneEntry.dialogue("Amaya", "Congrats again! We both got awards!", "single:Amaya_Smile", "IntRestaurant.jpg"),
+        SceneEntry.dialogue("{name}", "Thanks! You too.", "none", "IntRestaurant.jpg"),
+        SceneEntry.narrator("Suddenly, Miss Cloma approaches your table.", "IntRestaurant.jpgv"),
+        SceneEntry.dialogue("Cloma", "Hello. Is anyone sitting next to you?", "single:Cloma_Smile", "IntRestaurant.jpg"),
+        SceneEntry.dialogue("{name}", "No… it's okay.", "none", "IntRestaurant.jpg"),
+        SceneEntry.dialogue("Cloma", "Mind if I join you?", "single:Cloma_Smile", "IntRestaurant.jpg"),
         SceneEntry.choiceMarker("CLOMA_DAY6_EVENING_CHOICE"),
-        SceneEntry.narrator("The dinner continues.", "DINING"),
-        SceneEntry.narrator("You laugh, talk, and enjoy the night.", "DINING"),
-        SceneEntry.narrator("Tonight feels special… like the start of something more.", "DINING"),
-        SceneEntry.narrator("The day slowly ends, leaving memories of pride, excitement, and a little spark between you and Miss Cloma.", "DINING"),
+        SceneEntry.narrator("The dinner continues.", "IntRestaurant.jpg"),
+        SceneEntry.narrator("You laugh, talk, and enjoy the night.", "IntRestaurant.jpg"),
+        SceneEntry.narrator("Tonight feels special… like the start of something more.", "IntRestaurant.jpg"),
+        SceneEntry.narrator("The day slowly ends, leaving memories of pride, excitement, and a little spark between you and Miss Cloma.", "IntRestaurant.jpg"),
     };
     
     private static final SceneEntry[] AFTERNOON = {};
@@ -49,19 +49,19 @@ public class Day6Cloma implements DayInterface {
     
     private static final ChoiceEntry[] CHOICES_EVENING = {
         new ChoiceEntry("Invite Her To Sit", 10,5, Character.CLOMA,
-            SceneEntry.dialogue("{name}", "Of course, please sit here.", "none", "DINING"),
-            SceneEntry.dialogue("Cloma", "Thank you.", "single:Cloma_Smile", "DINING"),
-            SceneEntry.narrator("Your heart races as she sits across from you.", "DINING")
+            SceneEntry.dialogue("{name}", "Of course, please sit here.", "none", "IntRestaurant.jpg"),
+            SceneEntry.dialogue("Cloma", "Thank you.", "single:Cloma_Smile", "IntRestaurant.jpg"),
+            SceneEntry.narrator("Your heart races as she sits across from you.", "IntRestaurant.jpg")
         ),
         new ChoiceEntry("Politely Hesitate First", 5,0,  Character.CLOMA,
-            SceneEntry.dialogue("{name}", "Um… sure, I guess it's fine.", "none", "DINING"),
-            SceneEntry.dialogue("Cloma", "(smiles) Thank you.", "single:Cloma_Smile", "DINING"),
-            SceneEntry.narrator("She sits, and you notice her gentle expression.", "DINING")
+            SceneEntry.dialogue("{name}", "Um… sure, I guess it's fine.", "none", "IntRestaurant.jpg"),
+            SceneEntry.dialogue("Cloma", "(smiles) Thank you.", "single:Cloma_Smile", "IntRestaurant.jpg"),
+            SceneEntry.narrator("She sits, and you notice her gentle expression.", "IntRestaurant.jpg")
         ),
         new ChoiceEntry("Say No Politely", -5,-2,  Character.CLOMA,
-            SceneEntry.dialogue("{name}", "Actually… maybe another time?", "none", "DINING"),
-            SceneEntry.dialogue("Cloma", "Oh… okay.", "single:Cloma_Casual", "DINING"),
-            SceneEntry.narrator("She walks away, leaving a small sting of disappointment.", "DINING")
+            SceneEntry.dialogue("{name}", "Actually… maybe another time?", "none", "IntRestaurant.jpg"),
+            SceneEntry.dialogue("Cloma", "Oh… okay.", "single:Cloma_Casual", "IntRestaurant.jpg"),
+            SceneEntry.narrator("She walks away, leaving a small sting of disappointment.", "IntRestaurant.jpg")
         ),
     };
     
