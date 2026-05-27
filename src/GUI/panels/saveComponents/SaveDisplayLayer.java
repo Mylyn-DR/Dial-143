@@ -1,15 +1,23 @@
 package GUI.panels.saveComponents;
 
+import GUI.panels.MainFrame;
+import Storyline.RouteManager;
+import Storyline.AmayaRoute.AmayaRoute;
+import Storyline.CeleresRoute.CeleresRoute;
+import Storyline.ClomaRoute.ClomaRoute;
+import Storyline.RosarioRoute.RosarioRoute;
+import Entities.Character;
 import Main.GameAPI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.prefs.Preferences;
 
 public class SaveDisplayLayer extends JPanel {
 
-    private final GameAPI gameAPI;
-    private Runnable onBack;
-    private Runnable onLoad;
+    private final MainFrame mainFrame;
+    private final GameAPI   gameAPI;
+    private Runnable        onBack;
 
     private static final int SLOT_COUNT = 6;
 
@@ -27,6 +35,10 @@ public class SaveDisplayLayer extends JPanel {
     private static final Color BACK_BG       = new Color(80, 85, 105); 
     private static final Color SHADOW_COLOR  = new Color(0, 0, 0, 35);
 
+    // ── Persistence ───────────────────────────────────────────────────────────
+    private static final String PREF_NODE = "dial143";
+    private static final String PREF_KEY  = "save_slot_";
+
     // ── Slot rows ─────────────────────────────────────────────────────────────
     private JPanel   slotsContainer;
     private JPanel[] slotRows   = new JPanel[SLOT_COUNT];
@@ -40,7 +52,8 @@ public class SaveDisplayLayer extends JPanel {
     private Font btnFont;
     private Font subFont;
 
-    public SaveDisplayLayer(GameAPI gameAPI) {
+    public SaveDisplayLayer(MainFrame mainFrame, GameAPI gameAPI) {
+        this.mainFrame = mainFrame;
         this.gameAPI = gameAPI;
         loadFonts();
         setOpaque(false);
@@ -49,14 +62,15 @@ public class SaveDisplayLayer extends JPanel {
         buildUI();
     }
 
+    // ── Public API ────────────────────────────────────────────────────────────
+
     public void setOnBack(Runnable callback) { this.onBack = callback; }
-    public void setOnLoad(Runnable callback) { this.onLoad = callback; }
 
     public void refresh() {
         for (int i = 0; i < SLOT_COUNT; i++) {
-            String info = gameAPI.getSaveInfo(i + 1);
-            boolean filled = info != null;
-            metaLabels[i].setText(filled ? info : "— Empty —");
+            String meta   = readSlotLabel(i + 1);
+            boolean filled = meta != null;
+            metaLabels[i].setText(filled ? meta : "— Empty —");
             metaLabels[i].setForeground(filled ? ACCENT_BLUE : TEXT_MUTED);
             loadBtns[i].setEnabled(filled);
             delBtns[i].setEnabled(filled);
@@ -68,7 +82,9 @@ public class SaveDisplayLayer extends JPanel {
     private void buildUI() {
         setBackground(BG_CARD);
         
-        JPanel header = new JPanel(new BorderLayout());
+        // ── Header ────────────────────────────────────────────────────────────
+        JPanel header = new JPanel(new BorderLayout()) {
+        };
         header.setOpaque(false);
         header.setPreferredSize(new Dimension(0, 80));
         header.setBorder(BorderFactory.createEmptyBorder(40, 60, 0, 60));
@@ -89,6 +105,7 @@ public class SaveDisplayLayer extends JPanel {
         header.add(titleLbl, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
+        // ── Slots ─────────────────────────────────────────────────────────────
         slotsContainer = new JPanel();
         slotsContainer.setOpaque(false);
         slotsContainer.setLayout(new BoxLayout(slotsContainer, BoxLayout.Y_AXIS));
@@ -109,7 +126,9 @@ public class SaveDisplayLayer extends JPanel {
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         add(scroll, BorderLayout.CENTER);
 
-        JPanel footer = new JPanel(new BorderLayout());
+        // ── Footer ────────────────────────────────────────────────────────────
+        JPanel footer = new JPanel(new BorderLayout()) {
+        };
         footer.setOpaque(false);
         footer.setPreferredSize(new Dimension(0, 90));
         footer.setBorder(BorderFactory.createEmptyBorder(30, 60, 20, 60));
@@ -149,7 +168,7 @@ public class SaveDisplayLayer extends JPanel {
         row.setOpaque(false);
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         row.setPreferredSize(new Dimension(0, 70));
-        row.setBorder(BorderFactory.createEmptyBorder(10, 22, 10, 18));
+        row.setBorder(BorderFactory.createEmptyBorder(10, 22, 10, 18)); 
 
         JPanel info = new JPanel();
         info.setOpaque(false);
@@ -180,7 +199,7 @@ public class SaveDisplayLayer extends JPanel {
 
         saveBtn.addActionListener(e -> confirmSave(slot));
         loadBtn.addActionListener(e -> confirmLoad(slot));
-        delBtn.addActionListener(e -> confirmDelete(slot));
+        delBtn.addActionListener (e -> confirmDelete(slot));
 
         loadBtns[index] = loadBtn;
         delBtns[index]  = delBtn;
@@ -194,84 +213,193 @@ public class SaveDisplayLayer extends JPanel {
         return row;
     }
 
-    private void confirmSave(int slot) {
-        JOptionPane pane = new JOptionPane(
-            "Overwrite Slot " + slot + " with current progress?",
-            JOptionPane.PLAIN_MESSAGE,
-            JOptionPane.YES_NO_OPTION
-        );
-        JDialog dialog = pane.createDialog(this, "Confirm Save");
-        makeButtonsNonFocusable(pane);
-        dialog.setVisible(true);
-        
-        Object value = pane.getValue();
-        if (value != null && value instanceof Integer) {
-            int r = (Integer) value;
-            if (r == JOptionPane.YES_OPTION) { 
-                gameAPI.saveGame(slot);
-                refresh(); 
-            }
-        }
-    }
 
-    private void confirmLoad(int slot) {
-        JOptionPane pane = new JOptionPane(
-            "Load Slot " + slot + "? Unsaved progress will be lost.",
-            JOptionPane.PLAIN_MESSAGE,
-            JOptionPane.YES_NO_OPTION
-        );
-        JDialog dialog = pane.createDialog(this, "Confirm Load");
-        makeButtonsNonFocusable(pane);
-        dialog.setVisible(true);
-        
-        Object value = pane.getValue();
-        if (value != null && value instanceof Integer) {
-            int r = (Integer) value;
-            if (r == JOptionPane.YES_OPTION) {
-                boolean success = gameAPI.loadGame(slot);
-                if (success) {
-                    if (onLoad != null) onLoad.run();
-                } else {
-                    JOptionPane.showMessageDialog(this, 
-                        "Failed to load save file!", 
-                        "Error", 
-                        JOptionPane.ERROR_MESSAGE);
-                }
-            }
+private void confirmSave(int slot) {
+    JOptionPane pane = new JOptionPane(
+        "Overwrite Slot " + slot + " with current progress?",
+        JOptionPane.PLAIN_MESSAGE,
+        JOptionPane.YES_NO_OPTION
+    );
+    JDialog dialog = pane.createDialog(this, "Confirm Save");
+    makeButtonsNonFocusable(pane);
+    dialog.setVisible(true);
+    
+    Object value = pane.getValue();
+    if (value != null && value instanceof Integer) {
+        int r = (Integer) value;
+        if (r == JOptionPane.YES_OPTION) { 
+            writeSlot(slot); 
+            refresh(); 
         }
     }
+}
 
-    private void confirmDelete(int slot) {
-        JOptionPane pane = new JOptionPane(
-            "Delete Slot " + slot + "? This cannot be undone.",
-            JOptionPane.PLAIN_MESSAGE,
-            JOptionPane.YES_NO_OPTION
-        );
-        JDialog dialog = pane.createDialog(this, "Confirm Delete");
-        makeButtonsNonFocusable(pane);
-        dialog.setVisible(true);
-        
-        Object value = pane.getValue();
-        if (value != null && value instanceof Integer) {
-            int r = (Integer) value;
-            if (r == JOptionPane.YES_OPTION) { 
-                gameAPI.deleteSave(slot);
-                refresh(); 
-            }
+private void confirmLoad(int slot) {
+    JOptionPane pane = new JOptionPane(
+        "Load Slot " + slot + "? Unsaved progress will be lost.",
+        JOptionPane.PLAIN_MESSAGE,
+        JOptionPane.YES_NO_OPTION
+    );
+    JDialog dialog = pane.createDialog(this, "Confirm Load");
+    makeButtonsNonFocusable(pane);
+    dialog.setVisible(true);
+    
+    Object value = pane.getValue();
+    if (value != null && value instanceof Integer) {
+        int r = (Integer) value;
+        if (r == JOptionPane.YES_OPTION){ 
+            readSlot(slot); 
+            
         }
     }
+}
+
+private void confirmDelete(int slot) {
+    JOptionPane pane = new JOptionPane(
+        "Delete Slot " + slot + "? This cannot be undone.",
+        JOptionPane.PLAIN_MESSAGE,
+        JOptionPane.YES_NO_OPTION
+    );
+    JDialog dialog = pane.createDialog(this, "Confirm Delete");
+    makeButtonsNonFocusable(pane);
+    dialog.setVisible(true);
+    
+    Object value = pane.getValue();
+    if (value != null && value instanceof Integer) {
+        int r = (Integer) value;
+        if (r == JOptionPane.YES_OPTION) { 
+            deleteSlot(slot); 
+            refresh(); 
+        }
+    }
+}
         
     private void makeButtonsNonFocusable(Container container) {
         for (Component comp : container.getComponents()) {
             if (comp instanceof AbstractButton) {
                 comp.setFocusable(false);
             }
-            if (comp instanceof Container) {
+             if (comp instanceof Container) {
                 makeButtonsNonFocusable((Container) comp);
-            }
+             }
         }
     }
+    
 
+    // ── Persistence ───────────────────────────────────────────────────────────
+
+    private Preferences prefs() { return Preferences.userRoot().node(PREF_NODE); }
+
+    private void writeSlot(int slot) {
+        Preferences p = prefs();
+        String name = gameAPI.getPlayerName();
+        RouteManager lpStorage = gameAPI.getLpStorage();  // ← Use lpStorage
+
+        // Calculate total LP for display (sum of all characters)
+        int totalLP = lpStorage.getLPForCharacter(Character.AMAYA) +
+                      lpStorage.getLPForCharacter(Character.ROSARIO) +
+                      lpStorage.getLPForCharacter(Character.CLOMA) +
+                      lpStorage.getLPForCharacter(Character.CELERES);
+
+        // Save display label
+        p.put(PREF_KEY + slot, String.format("Day %d  •  %s  •  PP %d  LP %d  ₱%d",
+            gameAPI.getCurrentDay(),
+            (name == null || name.isEmpty()) ? "???" : name,
+            gameAPI.getPP(), totalLP, gameAPI.getSalary()
+        ));
+
+        // Save basic stats
+        p.putInt(PREF_KEY + slot + "_day",     gameAPI.getCurrentDay());
+        p.putInt(PREF_KEY + slot + "_pp",      gameAPI.getPP());
+        p.putInt(PREF_KEY + slot + "_salary",  gameAPI.getSalary());
+        p.put(   PREF_KEY + slot + "_name",    name != null ? name : "");
+        p.put(   PREF_KEY + slot + "_gender",  gameAPI.getPlayerGender()  != null ? gameAPI.getPlayerGender()  : "");
+        p.put(   PREF_KEY + slot + "_pronoun", gameAPI.getPlayerPronoun() != null ? gameAPI.getPlayerPronoun() : "");
+        p.putInt(PREF_KEY + slot + "_scene",   gameAPI.getDialogueScene());
+        p.put(   PREF_KEY + slot + "_choiceID",gameAPI.getChoiceID());
+        p.put(   PREF_KEY + slot + "_chosenChoiceID",gameAPI.getChosenChoiceID());
+        p.putInt(PREF_KEY + slot + "_subScene",gameAPI.getSubSceneIndex());
+        p.put(   PREF_KEY + slot + "_segment", gameAPI.getCurrentSegment().name());
+
+        // Save per-character LP
+        p.putInt(PREF_KEY + slot + "_lp_amaya",   lpStorage.getLPForCharacter(Character.AMAYA));
+        p.putInt(PREF_KEY + slot + "_lp_rosario", lpStorage.getLPForCharacter(Character.ROSARIO));
+        p.putInt(PREF_KEY + slot + "_lp_cloma",   lpStorage.getLPForCharacter(Character.CLOMA));
+        p.putInt(PREF_KEY + slot + "_lp_celeres", lpStorage.getLPForCharacter(Character.CELERES));
+
+        // Save active route info
+        if (gameAPI.getActiveRoute() != null) {
+            p.put(PREF_KEY + slot + "_active_char", gameAPI.getActiveRoute().getRouteName());
+        } else {
+            p.put(PREF_KEY + slot + "_active_char", "null");
+        }
+
+        try { p.flush(); } catch (Exception ignored) {}
+    }
+
+    private void readSlot(int slot) {
+        Preferences p = prefs();
+        if (p.get(PREF_KEY + slot, null) == null) return;
+
+        gameAPI.resetStats();
+        RouteManager lpStorage = gameAPI.getLpStorage();
+
+        // Clear existing LP first
+        lpStorage.setCharacter(Character.AMAYA, p.getInt(PREF_KEY + slot + "_lp_amaya", 0));
+        lpStorage.setCharacter(Character.ROSARIO, p.getInt(PREF_KEY + slot + "_lp_rosario", 0));
+        lpStorage.setCharacter(Character.CLOMA, p.getInt(PREF_KEY + slot + "_lp_cloma", 0));
+        lpStorage.setCharacter(Character.CELERES, p.getInt(PREF_KEY + slot + "_lp_celeres", 0));
+
+        // Restore active route if one was saved
+        String activeChar = p.get(PREF_KEY + slot + "_active_char", "null");
+        if (!activeChar.equalsIgnoreCase("null")) {
+            lpStorage.selectRoute(gameAPI.getCharacterRoute(activeChar), activeChar);
+            gameAPI.setActiveRoute(activeChar);
+        } else {
+            lpStorage.clearRoute();
+            gameAPI.setActiveRoute(null);
+        }
+        
+        gameAPI.setPP(p.getInt(PREF_KEY + slot + "_pp", 0));
+        gameAPI.setSalary(p.getInt(PREF_KEY + slot + "_salary", 0));
+        gameAPI.setCurrentDay(p.getInt(PREF_KEY + slot + "_day", 1));
+        gameAPI.setCurrentDayScript(gameAPI.scriptForDay(gameAPI.getCurrentDay()));
+        gameAPI.setPlayerIdentity(
+            p.get(PREF_KEY + slot + "_name", ""),
+            p.get(PREF_KEY + slot + "_gender", ""),
+            p.get(PREF_KEY + slot + "_pronoun", "")
+        );
+        gameAPI.setDialogueScene(p.getInt(PREF_KEY + slot + "_scene", 0));
+        gameAPI.setChoiceID(p.get(PREF_KEY + slot + "_choiceID", "null"));
+        gameAPI.setChosenChoiceID(p.get(PREF_KEY + slot + "_chosenChoiceID", "null"));
+        gameAPI.setSubSceneIndex(p.getInt(PREF_KEY + slot + "_SubScene", 0));
+
+        try {
+            gameAPI.setCurrentSegment(GameAPI.Segment.valueOf(
+                p.get(PREF_KEY + slot + "_segment", "MORNING")));
+        } catch (Exception ignored) {}
+
+        // Restore LP directly to lpStorage
+        
+        mainFrame.showScreen("dialogue");
+    }
+ 
+    private void deleteSlot(int slot) {
+        Preferences p = prefs();
+        String[] keys = { "", "_day", "_pp", "_lp", "_salary", "_name", "_gender", 
+                          "_pronoun", "_scene", "_segment", "_lp_amaya", "_lp_rosario", 
+                          "_lp_cloma", "_lp_celeres", "_active_char" };
+        for (String k : keys) {
+            p.remove(PREF_KEY + slot + k);
+        }
+        try { p.flush(); } catch (Exception ignored) {}
+    }
+
+    private String readSlotLabel(int slot) {
+        return prefs().get(PREF_KEY + slot, null);
+    }
+
+    // ── Button factory ────────────────────────────────────────────────────────
     private JButton buildBtn(String text, Color bgColor, Color fgColor, int w, int h) {
         JButton btn = new JButton(text) {
             private boolean hov = false;
@@ -317,6 +445,8 @@ public class SaveDisplayLayer extends JPanel {
         return btn;
     }
 
+    // ── Fonts ─────────────────────────────────────────────────────────────────
+
     private void loadFonts() {
         try {
             java.io.InputStream s = getClass().getResourceAsStream(
@@ -338,6 +468,8 @@ public class SaveDisplayLayer extends JPanel {
             subFont   = new Font("Georgia", Font.PLAIN, 12);
         }
     }
+
+    // ── Size overrides ────────────────────────────────────────────────────────
 
     @Override public Dimension getMinimumSize()   { return new Dimension(1280, 720); }
     @Override public Dimension getMaximumSize()   { return new Dimension(1280, 720); }

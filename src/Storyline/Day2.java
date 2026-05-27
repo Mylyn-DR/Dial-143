@@ -50,7 +50,7 @@ public class Day2 implements DayInterface {
             SceneEntry.dialogue("{name}", "Um, sorry? But who are you again?", "none", "ConvenienceStore.jpg"),
             SceneEntry.dialogue("Cloma", "Oh! You forgot me already. So I will introduce myself again! By the way, I am Cloma, the HR here in the company.", "single:Cloma_Smile", "ConvenienceStore.jpg")
         ),
-        new ChoiceEntry("Hello!", 5, 3, Character.CLOMA,
+        new ChoiceEntry("Hello!", 5, 0, Character.CLOMA,
             SceneEntry.dialogue("{name}", "Oh, hello, Miss Cloma! I'm the one you hired. Thanks for that!", "single:Cloma_Casual", "ConvenienceStore.jpg"),
             SceneEntry.dialogue("Cloma", "You remembered me! It seems like everything went well.", "single:Cloma_Smile", "ConvenienceStore.jpg"),
             SceneEntry.dialogue("{name}", "My first day was nervous, but somehow I slowly adjusted to the environment here because they are so approachable.", "single:Cloma_Casual", "ConvenienceStore.jpg"),
@@ -71,7 +71,7 @@ public class Day2 implements DayInterface {
     };
     
     private static final ChoiceEntry[] CHOICES_M15 = {
-        new ChoiceEntry("Ask for help directly", 5, 3, Character.CELERES,
+        new ChoiceEntry("Ask for help directly", 5, 0, Character.CELERES,
             SceneEntry.dialogue("{name}", "I am. I heard I'll ask for help here on fixing my computer. The computer keeps freezing.", "none", "ITDepartment.jpg"),
             SceneEntry.dialogue("{name}", "If it's alright. Can you check it?", "none", "ITDepartment.jpg"),
             SceneEntry.dialogue("Celeres", "Alright. First, did you restart the computer?", "single:Celeres_Casual", "ITDepartment.jpg"),
@@ -81,7 +81,7 @@ public class Day2 implements DayInterface {
             SceneEntry.dialogue("Celeres", "It's fixed. Outdated drivers. Workstation 420, one of the old ones.", "single:Celeres_Casual", "MorningOffice.jpg"),
             SceneEntry.dialogue("{name}", "Thank you, Sir Celeres!", "none", "MorningOffice.jpg")
         ),
-        new ChoiceEntry("Just inform the issue", 2, 3, Character.CELERES,
+        new ChoiceEntry("Just inform the issue", 2, 0, Character.CELERES,
             SceneEntry.dialogue("{name}", "Ah, yes. I am. My computer keeps freezing.", "none", "ITDepartment.jpg"),
             SceneEntry.dialogue("Celeres", "Freezing? Workstation number?", "single:Celeres_Casual", "ITDepartment.jpg"),
             SceneEntry.dialogue("{name}", "420.", "none", "ITDepartment.jpg"),

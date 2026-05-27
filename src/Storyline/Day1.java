@@ -51,7 +51,7 @@ public class Day1 implements DayInterface {
             SceneEntry.dialogue("{name}", "Sorry? Who are you?", "none", "MorningElevator.jpg"),
             SceneEntry.dialogue("Rosario", "I'm Rosario, your supervisor. I assume that your name is {name}?", "single:Rosario_Smile", "MorningElevator.jpg")
         ),
-        new ChoiceEntry("The one and only.", 5, 3, Character.ROSARIO,
+        new ChoiceEntry("The one and only.", 1, 3, Character.ROSARIO,
             SceneEntry.dialogue("{name}", "I'm {name}, the one and only.", "none", "MorningElevator.jpg"),
             SceneEntry.dialogue("Rosario", "Um, okay then… I'm Rosario, your supervisor and team leader. Nice to meet you too.", "single:Rosario_Casual", "MorningElevator.jpg")
         ),
@@ -62,7 +62,7 @@ public class Day1 implements DayInterface {
             SceneEntry.dialogue("{name}", "What exactly is my role here?", "none", "MorningElevator.jpg"),
             SceneEntry.dialogue("Rosario", "You'll be working as an Inbound agent. You'll handle customer calls from inquiries to technical support.", "single:Rosario_Casual", "MorningElevator.jpg")
         ),
-        new ChoiceEntry("What's the team like?", 5, 5, Character.ROSARIO,
+        new ChoiceEntry("What's the team like?", 5, 3, Character.ROSARIO,
             SceneEntry.dialogue("{name}", "So what's the team like? Who will I be working with?", "none", "MorningElevator.jpg"),
             SceneEntry.dialogue("Rosario", "They're nice and competent. The last newcomer we had was someone who got hired 2 months ago.", "single:Rosario_Casual", "MorningElevator.jpg")
         ),
@@ -80,12 +80,12 @@ public class Day1 implements DayInterface {
     };
     
     private static final ChoiceEntry[] CHOICES_E14 = {
-        new ChoiceEntry("Who is Sir Rosario?", 8, 3, Character.ROSARIO,
+        new ChoiceEntry("Who is Sir Rosario?", 8, 0, Character.ROSARIO,
             SceneEntry.dialogue("{name}", "I'm curious about our Team Leader. Do you know anything about him?", "none", "ConvenienceStore.jpg"),
             SceneEntry.dialogue("Amaya", "Oh, him? He's actually very kind! We hang out sometimes after our shifts since we go the same route back home.", "single:Amaya_Casual", "ConvenienceStore.jpg"),
             SceneEntry.dialogue("Amaya", "But don't tell anyone — I'm kind of scared of him. He's very strict about our job. Treats it like it's his lifeline.", "single:Amaya_Casual", "ConvenienceStore.jpg")
         ),
-        new ChoiceEntry("How long have you worked here?", 8, 3, Character.AMAYA,
+        new ChoiceEntry("How long have you worked here?", 8, 0, Character.AMAYA,
             SceneEntry.dialogue("{name}", "How long have you worked here? Seems like you've been here longer than I have.", "none", "ConvenienceStore.jpg"),
             SceneEntry.dialogue("Amaya", "I got the job actually 2 months ago. I'm just here for the job experience before I pursue a profession using my IT bachelor's.", "single:Amaya_Casual", "ConvenienceStore.jpg"),
             SceneEntry.dialogue("Amaya", "It felt like forever to do any job hunting. I don't want to experience it again…", "single:Amaya_Sad", "ConvenienceStore.jpg")

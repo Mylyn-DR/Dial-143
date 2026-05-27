@@ -12,14 +12,16 @@ import Storyline.RosarioRoute.RosarioRoute;
 import Entities.Character;
 import Entities.*;
 import Main.GameAPI;
+import Main.GameAPI.Segment;
+import Storyline.SceneManager.SceneManagerDelegate;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
  
-public class InteractionPanel extends JPanel implements SceneManager.SceneManagerDelegate {
+public class InteractionPanel extends JPanel implements SceneManagerDelegate {
  
-    private GameAPI               gameAPI;
-    private MainFrame             mainFrame;  // Keep for screen navigation only
+    private MainFrame             mainPanel;
+    private final GameAPI         gameAPI;
     private BackgroundLayer       bg;
     private SpriteLayer           sprite;
     private DialogueBoxLayer      dialogueBox;
@@ -38,32 +40,102 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
     private Thread       bgThread;
     private SceneManager sceneManager;
  
-    public InteractionPanel(GameAPI gameAPI, MainFrame mainFrame, SettingsPanel sharedSettings, InventoryPanel inventory) {
+    public InteractionPanel(MainFrame mainPanel, GameAPI gameAPI, ItemUse itemUse, SettingsPanel sharedSettings, InventoryPanel inventory) {
+        this.mainPanel = mainPanel;
         this.gameAPI = gameAPI;
-        this.mainFrame = mainFrame;
         this.settings  = sharedSettings;
         this.inventory = inventory;
+        this.itemUse = itemUse; 
+        sceneManager = new SceneManager(this, gameAPI.getActiveRoute(), gameAPI.getLpStorage());
+        waitForPreload();
         initComponents();
-        setPreferredSize(new java.awt.Dimension(1280, 720));
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                formMouseClicked(evt);
-            }
-        });
-        setLayout(new javax.swing.OverlayLayout(this));
         initializeLayers();
-        sceneManager = new SceneManager(gameAPI, new Day1(), this, 
-                                        gameAPI.getActiveRoute(), 
-                                        gameAPI.getLpStorage());
     }
  
     public ItemUse getItemUse() { 
         return itemUse; 
     }
+    
+    public void saveScene(){
+        System.out.println("Saving Scene from Interaction Panel");
+        gameAPI.setChoiceID(sceneManager.getChoiceID());
+        gameAPI.setChosenChoiceID(sceneManager.getChosenChoiceID());
+        gameAPI.setCurrentSegment(sceneManager.getCurrentSegment());
+        gameAPI.setSubSceneIndex(sceneManager.getSubSceneIndex());
+        gameAPI.setDialogueScene(sceneManager.getCurrentSceneIndex());
+        
+        System.out.println("Current Day Script: " + gameAPI.getCurrentDayScript());
+        System.out.println("Current Day Segment: " + gameAPI.getCurrentSegment());
+        System.out.println("Current Day Scene Index: " + gameAPI.getDialogueScene());
+        System.out.println("Current Day SubScene Index: " + gameAPI.getSubSceneIndex());
+        System.out.println("Current Day ChoiceID: " + gameAPI.getChoiceID());
+        System.out.println("Current Day ChosenChoiceID: " + gameAPI.getChosenChoiceID());
+    }
+    
+    public void setScene(){
+        System.out.println("Setting Scene from Interaction Panel");
+        sceneManager.clear();
+        sceneManager.setDayScript(gameAPI.getCurrentDayScript());
+        sceneManager.setCurrentSegment(gameAPI.getCurrentSegment());
+        sceneManager.setCurrentSceneIndex(gameAPI.getDialogueScene());
+        sceneManager.setSubSceneIndex(gameAPI.getSubSceneIndex());
+        sceneManager.setChoiceID(gameAPI.getChoiceID());
+        sceneManager.setChosenChoiceID(gameAPI.getChosenChoiceID());
+        sceneManager.setActiveRoute(gameAPI.getActiveRoute());
+        sceneManager.setLPStorage(gameAPI.getLpStorage());
+        
+        System.out.println("Current Day Script: " + gameAPI.getCurrentDayScript());
+        System.out.println("Current Day Segment: " + gameAPI.getCurrentSegment());
+        System.out.println("Current Day Scene Index: " + gameAPI.getDialogueScene());
+        System.out.println("Current Day SubScene Index: " + gameAPI.getSubSceneIndex());
+        System.out.println("Current Day ChoiceID: " + gameAPI.getChoiceID());
+        System.out.println("Current Day ChosenChoiceID: " + gameAPI.getChosenChoiceID());
+    }
+    
+    public void loadContent() {
+        setScene();
+        
+        dialogueAdvanceLock = false;
+        dialogueBox.onDialogueShown();
+        uiComponents.setPpValue(gameAPI.getPP());
+        uiComponents.setSalaryValue(gameAPI.getSalary());
+        uiComponents.setLpValue(gameAPI.getLP());
+        uiComponents.updateDayLabel(gameAPI.getCurrentDay(), gameAPI.getCurrentSegment());
+ 
+        // ── Audio ─────────────────────────────────────────────────────────────
+        AudioPlayer audio = AudioPlayer.getInstance();
+        switch (gameAPI.getCurrentSegment()) {
+            case MORNING -> {
+                if (!audio.isPlaying(AudioPlayer.Track.GAMEPLAY)) {
+                    audio.crossfadeTo(AudioPlayer.Track.GAMEPLAY, 800);
+                }
+            }
+            case EVENING -> {
+                if (!audio.isPlaying(AudioPlayer.Track.GAMEPLAY)) {
+                    audio.crossfadeTo(AudioPlayer.Track.GAMEPLAY, 800);
+                }
+            }
+            case ENDING -> {
+                mainPanel.playEndingMusic();
+            }
+        }
+        // ─────────────────────────────────────────────────────────────────────
+ 
+        Segment seg = switch (gameAPI.getCurrentSegment()) {
+            case MORNING -> {  yield Segment.MORNING; }
+            case AFTERNOON -> { yield Segment.AFTERNOON; }
+            case EVENING -> {  yield Segment.EVENING; }
+            case ENDING -> { 
+                sceneManager.setActiveRoute(gameAPI.getActiveRoute()); 
+                yield Segment.ENDING; }
+        };
+        
+        //sceneManager.start(seg, gameAPI.getDialogueScene());
+        sceneManager.start();
+    }
  
     // ── SceneManagerDelegate ──────────────────────────────────────────────────
  
-    @Override
     public void waitForPreload() {
         try {
             if (spriteThread != null) spriteThread.join();
@@ -205,28 +277,14 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
  
     @Override
     public void addPP(int amount) {
-        uiComponents.addPpPoints(amount);
-        gameAPI.setPP(gameAPI.getPP() + amount);
+        gameAPI.setPpGained(amount);
+        uiComponents.setPpValue(getPlayerPP());
     }
  
     @Override
     public void addLP(int amount, String lpCharacter) {
-        System.out.println("DEBUG: addLP called with " + amount + " for " + lpCharacter);
-        RouteManager lp = gameAPI.getLpStorage();
-
-        if (lpCharacter != null) {
-            int before = lp.getLPForCharacter(lpCharacter);
-            lp.addCharacterLP(lpCharacter, amount);
-            int after = lp.getLPForCharacter(lpCharacter);
-            System.out.println("DEBUG: LP for " + lpCharacter + " changed from " + before + " to " + after);
-            // Update UI if this is the active character
-            if (lpCharacter.equals(gameAPI.getActiveCharacter())) {
-                uiComponents.addLpPoints(amount);
-            }
-        } else if (gameAPI.hasActiveRoute()) {
-            lp.addCharacterLP(gameAPI.getActiveCharacter(), amount);
-            uiComponents.addLpPoints(amount);
-        }
+        if (gameAPI.addLPForCharacter(lpCharacter, amount))
+            uiComponents.setLpValue(gameAPI.getLP());
     }
  
     @Override
@@ -234,7 +292,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         dialogueAdvanceLock = false;
         dialogueBox.onSceneEnd();
         saveStats();
-        mainFrame.onMorningComplete();  // Keep - screen navigation
+        mainPanel.onMorningComplete();
     }
  
     @Override
@@ -242,7 +300,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         dialogueAdvanceLock = false;
         dialogueBox.onSceneEnd();
         saveStats();
-        mainFrame.onAfternoonComplete();  // Keep - screen navigation
+        mainPanel.onAfternoonComplete();
     }
     
     @Override
@@ -250,7 +308,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         dialogueAdvanceLock = false;
         dialogueBox.onSceneEnd();
         saveStats();
-        mainFrame.onEveningComplete();  // Keep - screen navigation
+        mainPanel.onEveningComplete();
     }
  
     @Override
@@ -258,87 +316,19 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         dialogueAdvanceLock = false;
         dialogueBox.onSceneEnd();
     }
- 
-    public void loadContent() {
-        dialogueAdvanceLock = false;
-        dialogueBox.onDialogueShown();
-        uiComponents.setPpValue(gameAPI.getPP());
-        uiComponents.setSalaryValue(gameAPI.getSalary());
-        
-        // Get LP from GameAPI using active character
-        int currentLP = 0;
-        if (gameAPI.hasActiveRoute()) {
-            String activeChar = gameAPI.getActiveCharacter();
-            currentLP = gameAPI.getLPForCharacter(activeChar);
-            System.out.println("loadContent - activeChar: " + activeChar + ", LP: " + currentLP);
-        } else {
-            System.out.println("loadContent - No active route");
-        }
-        uiComponents.setLpValue(currentLP);
-        uiComponents.updateDayLabel(gameAPI.getCurrentDay(), gameAPI.getCurrentSegment());
- 
-        // ── Audio ─────────────────────────────────────────────────────────────
-        AudioPlayer audio = AudioPlayer.getInstance();
-        switch (gameAPI.getCurrentSegment()) {
-            case MORNING -> {
-                if (!audio.isPlaying(AudioPlayer.Track.GAMEPLAY)) {
-                    audio.crossfadeTo(AudioPlayer.Track.GAMEPLAY, 800);
-                }
-            }
-            case EVENING -> {
-                if (!audio.isPlaying(AudioPlayer.Track.GAMEPLAY)) {
-                    audio.crossfadeTo(AudioPlayer.Track.GAMEPLAY, 800);
-                }
-            }
-            case ENDING -> {
-                AudioPlayer.Track track = switch (gameAPI.getEndingType()) {
-                    case GOOD -> AudioPlayer.Track.GOOD_ENDING;
-                    case BAD -> AudioPlayer.Track.BAD_ENDING;
-                    case NEUTRAL -> AudioPlayer.Track.NEUTRAL_ENDING;
-                };
-                audio.crossfadeTo(track, 1200);
-            }
-            default -> {}
-        }
-        // ─────────────────────────────────────────────────────────────────────
- 
-        sceneManager.start(
-            convertToSceneManagerSegment(gameAPI.getCurrentSegment()), 
-            gameAPI.getDialogueScene()
-        );
-    }
-    
-    private SceneManager.Segment convertToSceneManagerSegment(GameAPI.Segment seg) {
-        return switch (seg) {
-            case MORNING -> SceneManager.Segment.MORNING;
-            case AFTERNOON -> SceneManager.Segment.AFTERNOON;
-            case EVENING -> SceneManager.Segment.EVENING;
-            case ENDING -> {
-                sceneManager.setActiveRoute(gameAPI.getActiveRoute());
-                yield SceneManager.Segment.ENDING;
-            }
-        };
-    }
     
     @Override
     public void onEndingComplete() {
-        mainFrame.onGameComplete();  // Keep - screen navigation
+        mainPanel.onGameComplete();
     }
     
-    public void setDayScript(DayInterface script) { 
-        sceneManager.setDayScript(script); 
-    }
-    
-    public void setRouteManager(RouteManager rm) {
-        sceneManager.setRouteManager(rm); 
-    }
- 
     // ── Internal helpers ──────────────────────────────────────────────────────
  
     private void handleRouteChoice(String characterId) {
         if ("none".equals(characterId)) {
             System.out.println("  Player chose to walk alone — BAD ENDING");
 
+            // Play the walk alone ending scene
             ChoiceEntry walkAloneEnding = new ChoiceEntry("No one", 0, 0,
                 SceneEntry.dialogue("{name}", "No. I shouldn't be crushing on anyone.", "none", "StreetEvening.jpg"),
                 SceneEntry.dialogue("{name}", "Focus. That's all that matters.", "none", "StreetEvening.jpg"),
@@ -350,33 +340,47 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
 
             sceneManager.onChoicePicked(walkAloneEnding);
 
+            // After the ending, restart the game
             Timer restartTimer = new Timer(4000, e -> {
-                mainFrame.onGameComplete();
+                mainPanel.onGameComplete();
             });
             restartTimer.setRepeats(false);
             restartTimer.start();
             return;
         }
 
+        // Get the chosen route (AmayaRoute, CeleresRoute, etc.)
         RouteManager chosenRoute = routeForCharacter(characterId);
         gameAPI.setActiveRoute(characterId);
+        gameAPI.getLpStorage().selectRoute(chosenRoute, characterId);
         DayInterface dayScript = chosenRoute.getDayScript(3);
-        int accLP = gameAPI.getLPForCharacter(characterId);
-        
+        int accLP = gameAPI.getLpStorage().getLPForCharacter(characterId);
+        // Update UI
         uiComponents.setLpValue(accLP);
         uiComponents.updateLoveMeterVisibility(gameAPI.getCurrentDay(), GameAPI.Segment.EVENING);
 
+        // Load the Day 3 evening scenes for this route
         sceneManager.setDayScript(dayScript);
-        sceneManager.start(SceneManager.Segment.EVENING, 0);
+        sceneManager.setCurrentSegment(Segment.EVENING);
+        sceneManager.setCurrentSceneIndex(0);
+        sceneManager.start();
     }
  
     private RouteManager routeForCharacter(String name) {
         return switch (name) {
-            case Character.AMAYA -> new AmayaRoute();
-            case Character.CELERES -> new CeleresRoute();
-            case Character.CLOMA -> new ClomaRoute();
-            case Character.ROSARIO -> new RosarioRoute();
-            default -> null;
+            case Character.AMAYA -> {
+                yield new AmayaRoute();
+            }
+            case Character.CELERES -> {
+                yield new CeleresRoute();
+            }
+            case Character.CLOMA -> {
+                yield new ClomaRoute();
+            }
+            case Character.ROSARIO -> {
+                yield new RosarioRoute();
+            }
+            default -> { yield null; }
         };
     }
  
@@ -393,31 +397,36 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
             objective  = p.length > 2 ? p[2] : "them";
         }
         
-        return text
+        String resolved = text
             .replace("{name}",               name != null ? name : "")
             .replace("{pronoun_subject}",    subject)
             .replace("{pronoun_possessive}", possessive)
             .replace("{pronoun_objective}",  objective);
+            
+        if (resolved.contains("{name}") || resolved.contains("{pronoun_")) {
+        }
+        
+        return resolved;
     }
  
     private void saveStats() {
-        gameAPI.setPP(uiComponents.getCurrentPpValue());
-        gameAPI.setSalary(uiComponents.getCurrentSalaryValue());
+//        gameAPI.setPP(uiComponents.getCurrentPpValue());
+//        gameAPI.setSalary(uiComponents.getCurrentSalaryValue());
     }
  
     private void initializeLayers() {
         bg          = new BackgroundLayer();
         sprite      = new SpriteLayer();
-        dialogueBox = new DialogueBoxLayer(gameAPI);  // ← Pass GameAPI
- 
-        itemUse = new ItemUse(gameAPI, uiComponents, null);
+        dialogueBox = new DialogueBoxLayer(mainPanel, gameAPI);
+
         dialogueBox.setOnAdvanceRequest(() -> {
             if (!choices.isVisible() && !showingIdentityCreation && !dialogueAdvanceLock) {
                 sceneManager.advanceScene();
+            } else if (dialogueAdvanceLock) {
             }
         });
  
-        uiComponents = new TopBarComponents(gameAPI);  // ← Pass GameAPI
+        uiComponents = new TopBarComponents(mainPanel);
         uiComponents.setSettingsPanel(settings);
         uiComponents.setParentScreen("dialogue");
         uiComponents.setInventoryPanel(inventory);
@@ -425,7 +434,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
             requestFocusInWindow();
         });
  
-        identityPopup = new IdentityCreationLayer(gameAPI);  // ← Pass GameAPI
+        identityPopup = new IdentityCreationLayer(mainPanel, gameAPI);
         choices       = new ChoiceButtonLayer();
         
         add(choices);
@@ -484,6 +493,7 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
         bgThread.setDaemon(true);
         spriteThread.start();
         bgThread.start();
+        
     }
     
     @SuppressWarnings("unchecked")
@@ -504,8 +514,53 @@ public class InteractionPanel extends JPanel implements SceneManager.SceneManage
                 sceneManager.advanceScene();
             }
     }//GEN-LAST:event_formMouseClicked
-
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
+
+    //public void loadContent() {
+    //        setDayScript(gameAPI.getCurrentDayScript());
+    //        
+    //        dialogueAdvanceLock = false;
+    //        dialogueBox.onDialogueShown();
+    //        uiComponents.setPpValue(gameAPI.getPP());
+    //        uiComponents.setSalaryValue(gameAPI.getSalary());
+    //        
+    //        
+    //        RouteManager rm = gameAPI.getLpStorage();
+    //        int currentLP = rm.hasActiveRoute() ? rm.getActiveLP() : 0;
+    //        uiComponents.setLpValue(currentLP);
+    //        uiComponents.updateDayLabel(gameAPI.getCurrentDay(), gameAPI.getCurrentSegment());
+    // 
+    //        // ── Audio ─────────────────────────────────────────────────────────────
+    //        AudioPlayer audio = AudioPlayer.getInstance();
+    //        switch (gameAPI.getCurrentSegment()) {
+    //            case MORNING -> {
+    //                if (!audio.isPlaying(AudioPlayer.Track.GAMEPLAY)) {
+    //                    audio.crossfadeTo(AudioPlayer.Track.GAMEPLAY, 800);
+    //                }
+    //            }
+    //            case EVENING -> {
+    //                if (!audio.isPlaying(AudioPlayer.Track.GAMEPLAY)) {
+    //                    audio.crossfadeTo(AudioPlayer.Track.GAMEPLAY, 800);
+    //                }
+    //            }
+    //            case ENDING -> {
+    //                mainPanel.playEndingMusic();
+    //            }
+    //        }
+    //        // ─────────────────────────────────────────────────────────────────────
+    // 
+    //        SceneManager.Segment seg = switch (gameAPI.getCurrentSegment()) {
+    //            case MORNING -> {  yield SceneManager.Segment.MORNING; }
+    //            case AFTERNOON -> { yield SceneManager.Segment.AFTERNOON; }
+    //            case EVENING -> {  yield SceneManager.Segment.EVENING; }
+    //            case ENDING -> { 
+    //                sceneManager.setActiveRoute(gameAPI.getActiveRoute()); 
+    //                yield SceneManager.Segment.ENDING; }
+    //        };
+    //        
+    //        sceneManager.start(seg, gameAPI.getDialogueScene());
+    //    }

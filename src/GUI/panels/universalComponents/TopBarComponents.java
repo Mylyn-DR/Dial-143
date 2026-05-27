@@ -7,16 +7,12 @@ import java.awt.event.*;
 import java.io.InputStream;
 import GUI.panels.inventoryComponents.*;
 import Main.GameAPI;
-import static Main.GameAPI.Segment.AFTERNOON;
-import static Main.GameAPI.Segment.ENDING;
-import static Main.GameAPI.Segment.EVENING;
-import static Main.GameAPI.Segment.MORNING;
 
 public class TopBarComponents extends JPanel {
     private Font pixelFont;
     private SettingsPanel  settings;
     private InventoryPanel inventory;
-    private GameAPI gameAPI;  // ← Changed from MainFrame to GameAPI
+    private MainFrame      mainFrame;
     private String         parentScreen = "shift";
 
     private Runnable onSettingsOpening;
@@ -36,8 +32,8 @@ public class TopBarComponents extends JPanel {
 
     private boolean loveMeterVisible = false;
 
-    public TopBarComponents(GameAPI gameAPI) {  // ← Changed parameter
-        this.gameAPI = gameAPI;
+    public TopBarComponents(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
         loadCustomFont();
 
         setBounds(0, 0, 1280, 720);
@@ -133,6 +129,8 @@ public class TopBarComponents extends JPanel {
         setComponentZOrder(btnSettings,  6);
     }
 
+    // ── Love Meter ────────────────────────────────────────────────────────────
+
     public void setLoveMeterVisible(boolean visible) {
         this.loveMeterVisible = visible;
         lpLabel.setVisible(visible);
@@ -149,7 +147,7 @@ public class TopBarComponents extends JPanel {
 
     public boolean isLoveMeterVisible() { return loveMeterVisible; }
 
-    public void updateLoveMeterVisibility(int currentDay, GameAPI.Segment segment) {  // ← Changed to GameAPI.Segment
+    public void updateLoveMeterVisibility(int currentDay, GameAPI.Segment segment) {
         boolean shouldShow = false;
         if (currentDay > 3) {
             shouldShow = true;
@@ -161,7 +159,7 @@ public class TopBarComponents extends JPanel {
         setLoveMeterVisible(shouldShow);
     }
 
-    public void updateDayLabel(int day, GameAPI.Segment segment) {  // ← Changed to GameAPI.Segment
+    public void updateDayLabel(int day, GameAPI.Segment segment) {
         String location = switch (segment) {
             case MORNING -> "Morning";
             case AFTERNOON -> "Afternoon";
@@ -213,6 +211,8 @@ public class TopBarComponents extends JPanel {
         super.paintComponent(g);
     }
 
+    // ── Icon loader ───────────────────────────────────────────────────────────
+
     private ImageIcon loadIcon(String filename, int maxW, int maxH) {
         try {
             java.io.InputStream s = getClass().getResourceAsStream("/GUI/resources/icons/" + filename);
@@ -227,6 +227,8 @@ public class TopBarComponents extends JPanel {
         }
     }
 
+    // ── Settings wiring ───────────────────────────────────────────────────────
+
     public void setSettingsPanel(SettingsPanel settings) {
         this.settings = settings;
         setupSettingsButton();
@@ -239,14 +241,17 @@ public class TopBarComponents extends JPanel {
         btnSettings.addActionListener(e -> {
             if (settings == null) return;
             btnSettings.setEnabled(false);
-            if (onSettingsOpening != null) onSettingsOpening.run();
+            if (onSettingsOpening != null) onSettingsOpening.run(); // pause
             settings.setPreviousScreen(parentScreen);
-            settings.showAsPopup();
-            if (onSettingsClosed != null) onSettingsClosed.run();
+            settings.showAsPopup();                                 // blocks (modal)
+            // resumes here after settings closes
+            if (onSettingsClosed != null) onSettingsClosed.run();   // resume
             btnSettings.setEnabled(true);
             requestFocusInWindow();
         });
     }
+
+    // ── Inventory wiring ──────────────────────────────────────────────────────
 
     public void setInventoryPanel(InventoryPanel inventory) {
         this.inventory = inventory;
@@ -257,8 +262,13 @@ public class TopBarComponents extends JPanel {
         if (inventory == null) return;
         btnInventory.setEnabled(false);
 
+        // Fire pause BEFORE showAsPopup blocks the EDT — same pattern as settings
         if (onInventoryOpening != null) onInventoryOpening.run();
+
+        // Blocks here (modal) until inventory dialog is disposed
         inventory.showAsPopup();
+
+        // Resumes here after inventory is fully closed
         if (onInventoryClosed != null) onInventoryClosed.run();
 
         btnInventory.setEnabled(true);
@@ -287,11 +297,15 @@ public class TopBarComponents extends JPanel {
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
+    // ── Callbacks ─────────────────────────────────────────────────────────────
+
     public void setParentScreen(String screenName)    { this.parentScreen = screenName; }
     public void onSettingsOpening(Runnable callback)  { this.onSettingsOpening  = callback; }
     public void onSettingsClosed(Runnable callback)   { this.onSettingsClosed   = callback; }
     public void onInventoryOpening(Runnable callback) { this.onInventoryOpening = callback; }
     public void onInventoryClosed(Runnable callback)  { this.onInventoryClosed  = callback; }
+
+    // ── Font ──────────────────────────────────────────────────────────────────
 
     private void loadCustomFont() {
         try {
@@ -306,9 +320,13 @@ public class TopBarComponents extends JPanel {
         }
     }
 
+    // ── Size overrides ────────────────────────────────────────────────────────
+
     @Override public Dimension getMinimumSize()   { return new Dimension(1280, 720); }
     @Override public Dimension getMaximumSize()   { return new Dimension(1280, 720); }
     @Override public Dimension getPreferredSize() { return new Dimension(1280, 720); }
+
+    // ── Stats API ─────────────────────────────────────────────────────────────
 
     public int getCurrentPpValue()     { try { return Integer.parseInt(ppValue.getText());     } catch (NumberFormatException e) { return 0; } }
     public int getCurrentLpValue()     { try { return Integer.parseInt(lpValue.getText());     } catch (NumberFormatException e) { return 0; } }
@@ -319,10 +337,9 @@ public class TopBarComponents extends JPanel {
     public void setSalaryValue(int points) { salaryValue.setText(String.valueOf(points)); }
 
     public void setStats(int pp, int lp)    { setPpValue(pp); setLpValue(lp); }
-    public void addPpPoints(int points)     { setPpValue(getCurrentPpValue() + points); }
-    public void addLpPoints(int points)     { setLpValue(getCurrentLpValue() + points); }
-    public void addSalaryPoints(int points) { setSalaryValue(getCurrentSalaryValue() + points); }
     public void resetStats()                { setPpValue(0); setLpValue(0); setSalaryValue(0); }
+
+    // ── Button accessors ──────────────────────────────────────────────────────
 
     public JButton getBtnSettings()  { return btnSettings; }
     public JButton getBtnInventory() { return btnInventory; }

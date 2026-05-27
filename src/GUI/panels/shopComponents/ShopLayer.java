@@ -175,6 +175,7 @@ public class ShopLayer extends JPanel {
             "/GUI/resources/icons/book.png",
             0, 300, Item.EffectType.LP_FLAT, 10));
     }
+
     // ── Interaction ───────────────────────────────────────────────────────────
 
     private void updateHover(Point p) {

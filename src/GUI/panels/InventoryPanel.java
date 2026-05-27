@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import GUI.panels.inventoryComponents.ItemLayer;
 import Entities.Item;
+import Main.GameAPI;
 
 public class InventoryPanel extends JPanel {
 
@@ -20,13 +21,15 @@ public class InventoryPanel extends JPanel {
     private JFrame    owner;
     private JPanel    gridPanel;
     private ItemLayer detailPanel;
+    private GameAPI   gameAPI; 
 
     private Runnable                     onInventoryOpening;
     private Runnable                     onInventoryClosed;
     private ItemLayer.ItemEffectListener onItemEffect;
 
-    public InventoryPanel(JFrame owner) {
+    public InventoryPanel(JFrame owner, GameAPI gameAPI) {
         this.owner       = owner;
+        this.gameAPI     = gameAPI;
         this.detailPanel = new ItemLayer();
         setOpaque(false);
         buildUI();

@@ -2,31 +2,36 @@ package Entities;
 
 import GUI.panels.shiftComponents.CallCreationTimer;
 import GUI.panels.universalComponents.TopBarComponents;
+import GUI.panels.MainFrame;
 import Main.GameAPI;
+import Storyline.RouteManager;
 
 public class ItemUse {
     
+    private final MainFrame mainPanel;
     private final GameAPI gameAPI;
     private final TopBarComponents topBar;
-    private final CallCreationTimer callBox;
+    private CallCreationTimer callBox;
    
     private int ppMultiplierBonus = 0;    
     private int lpMultiplierDailyBonus = 0;   
     private boolean hintAvailable = false;     
     
-    public ItemUse(GameAPI gameAPI, TopBarComponents topBar, CallCreationTimer callBox) {
+    public ItemUse(MainFrame mainPanel, GameAPI gameAPI, TopBarComponents topBar) {
+        this.mainPanel = mainPanel;
         this.gameAPI = gameAPI;
         this.topBar = topBar;
-        this.callBox = callBox;
     }
+    
+    public void setCallBox(CallCreationTimer callBox){ this.callBox = callBox; }
     
     public void handleItemEffect(Item.EffectType effectType, int effectValue) {
         
         switch (effectType) {
             case LP_FLAT:
-                if (gameAPI.hasActiveRoute()) {
+                if (gameAPI.getActiveRoute() != null) {
                     gameAPI.addLP(effectValue);
-                    topBar.addLpPoints(effectValue);
+                    topBar.setLpValue(gameAPI.getLP());
                 } 
                 break;
                 
@@ -39,16 +44,12 @@ public class ItemUse {
                 break;
                 
             case TIMER_BOOST:
-                if (callBox != null) {
-                    callBox.applyTimerBoostToCurrentCall(effectValue);
-                }
+                callBox.applyTimerBoostToCurrentCall(effectValue);
                 break;
                 
             case HINT_PER_CALL:
                 hintAvailable = true;
-                if (callBox != null) {
-                    callBox.activateHint();
-                }
+                callBox.activateHint();
                 break;
                 
             default:
@@ -68,21 +69,21 @@ public class ItemUse {
         return rawLP + bonus;
     }
     
-    public boolean hasPPMultiplier() {
-        return ppMultiplierBonus > 0;
-    }
+        public boolean hasPPMultiplier() {
+            return ppMultiplierBonus > 0;
+        }
 
-    public int getPPMultiplierBonus() {
-        return ppMultiplierBonus;
-    }
+        public int getPPMultiplierBonus() {
+            return ppMultiplierBonus;
+        }
 
-    public boolean hasLPMultiplier() {
-        return lpMultiplierDailyBonus > 0;
-    }
+        public boolean hasLPMultiplier() {
+            return lpMultiplierDailyBonus > 0;
+        }
 
-    public int getLPMultiplierBonus() {
-        return lpMultiplierDailyBonus;
-    }
+        public int getLPMultiplierBonus() {
+            return lpMultiplierDailyBonus;
+        }
 
     public boolean consumeHint() {
         if (!hintAvailable) return false;

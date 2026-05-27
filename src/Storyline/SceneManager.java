@@ -1,9 +1,8 @@
 package Storyline;
 
-import Main.GameAPI;
 import javax.swing.SwingUtilities;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
+import Main.GameAPI.Segment;
 
 public class SceneManager {
 
@@ -25,170 +24,148 @@ public class SceneManager {
         void onSceneEnd();
         int getPlayerPP();
     }
-
-    public enum Segment { MORNING, AFTERNOON, EVENING, ENDING }
-
-    // ── Dependencies ─────────────────────────────────────────────────────────
-    private final GameAPI gameAPI;
-    private DayInterface dayScript;
+    
+    private DayInterface         dayScript;
     private SceneManagerDelegate delegate;
+    private Segment              segment    = Segment.MORNING;
+    private int                  sceneIndex = 0;
+    private int                  subSceneIndex = 0;
+    
+    private String choiceID = "null";
+    private String chosenChoiceID = "null";
+    
+    private final ArrayList<SceneEntry> subSceneQueue = new ArrayList<>();
     private RouteManager activeRoute, lpStorage;
 
-    // ── Sub-scene queue (temporary, not saved) ───────────────────────────────
-    private final Deque<SceneEntry> subSceneQueue = new ArrayDeque<>();
-
-    // ── Constructor ──────────────────────────────────────────────────────────
-    public SceneManager(GameAPI gameAPI, DayInterface dayScript, 
-                        SceneManagerDelegate delegate,
-                        RouteManager activeRoute, RouteManager lpStorage) {
-        this.gameAPI = gameAPI;
+    /** Original constructor for backward compatibility */
+    public SceneManager(DayInterface dayScript, SceneManagerDelegate delegate) {
+        this(dayScript, delegate, null, null);
+    }
+    
+    /** New constructor with RouteManager support */
+    public SceneManager(DayInterface dayScript, SceneManagerDelegate delegate, RouteManager activeRoute, RouteManager lpStorage) {
         this.dayScript = dayScript;
-        this.delegate = delegate;
+        this.delegate  = delegate;
         this.activeRoute = activeRoute;
         this.lpStorage = lpStorage;
     }
-
-    // ── Public API ───────────────────────────────────────────────────────────
-    public void setDayScript(DayInterface dayScript) {
-        this.dayScript = dayScript;
+    
+    public SceneManager(SceneManagerDelegate delegate, RouteManager activeRoute, RouteManager lpStorage) {
+        this(null, delegate, activeRoute, lpStorage);
     }
 
-    public void setRouteManager(RouteManager rm) {
-        this.activeRoute = rm;
+    public void start(){
+        if (choiceID.equalsIgnoreCase("null")){
+            subSceneQueue.clear();
+            loadScene(sceneIndex++);
+        } else {
+            ChoiceEntry[] choices = dayScript.getChoicesForMarker(choiceID);
+            for (ChoiceEntry c : choices) {
+                if (c.label.equals(chosenChoiceID)) {
+                    onChoicePicked(c);
+                    advanceScene();
+                    break;
+                }
+            }
+        }
     }
     
-    public void setActiveRoute(RouteManager route) {
-        this.activeRoute = route;
-    }
-
-    public void start(Segment segment, int startIndex) {
-        // SYNC: Write to GameState
-        gameAPI.setCurrentSegment(convertSegment(segment));
-        gameAPI.setDialogueScene(startIndex);
-        
+    public void clear(){
+        System.out.println("Cleared");
         subSceneQueue.clear();
-        delegate.waitForPreload();
-        loadScene(startIndex);
+        subSceneIndex = 0;
+        sceneIndex = 0; 
+        choiceID = "null";
+        chosenChoiceID = "null";
+        dayScript = null;
+        lpStorage = null;
+        activeRoute = null;
     }
 
+    /** Called on every player click. Drains sub-scenes before advancing main index. */
     public void advanceScene() {
-        if (!subSceneQueue.isEmpty()) {
-            playEntry(subSceneQueue.poll());
+        if (subSceneQueue.size() > subSceneIndex && !subSceneQueue.isEmpty()) {
+            System.out.println("--------Subscene: " + subSceneIndex + "/"+ subSceneQueue.size());
+            playEntry(subSceneQueue.get(subSceneIndex++));
         } else {
-            int nextIndex = gameAPI.getDialogueScene() + 1;
-            gameAPI.setDialogueScene(nextIndex);
-            loadScene(nextIndex);
+            sceneIndex++;
+            choiceID = "null";
+            chosenChoiceID = "null";
+            subSceneIndex = 0;
+            subSceneQueue.clear();
+            loadScene(sceneIndex);
         }
     }
-
+    
+    public String getChosenChoiceID(){ return chosenChoiceID; }
+    public void setChosenChoiceID(String id){ chosenChoiceID = id; }
+    public String getChoiceID(){ return choiceID; }
+    public int getSubSceneIndex(){ return subSceneIndex; }
+    public void setChoiceID(String choiceID){ this.choiceID = choiceID; }
+    public void setSubSceneIndex(int idx){ this.subSceneIndex = idx; }
+    private SceneEntry[] getCurrentScenes() {
+        return switch (segment) {
+            case MORNING -> dayScript.getMorningScenes();
+            case AFTERNOON -> dayScript.getAfternoonScenes();
+            case EVENING -> dayScript.getEveningScenes();
+            case ENDING -> activeRoute.getEndingScene(lpStorage.getActiveLP());
+        };
+    }
+    
+    public void setDayScript(DayInterface dayScript) { this.dayScript = dayScript; }
+    public void setActiveRoute(RouteManager rm){ activeRoute = rm; }
+    public void setLPStorage(RouteManager rm){ lpStorage = rm; }
+    
+    /** Called by InteractionPanel after a choice is selected. */
     public void onChoicePicked(ChoiceEntry chosen) {
-        // Apply PP reward (if any)
-        if (chosen.ppReward != 0) {
-            delegate.addPP(chosen.ppReward);
-        }
-        // Apply LP rewards
         chosen.lpRewards.forEach((character, amount) -> delegate.addLP(amount, character));
-
+        chosenChoiceID = chosen.label;
+        System.out.println("Selected: " + chosenChoiceID);
         subSceneQueue.clear();
         if (chosen.subScenes != null) {
-            for (SceneEntry s : chosen.subScenes) {
-                subSceneQueue.add(s);
-            }
+            System.out.println("subscene load");
+            for (SceneEntry s : chosen.subScenes) subSceneQueue.add(s);
         }
-
-        if (!subSceneQueue.isEmpty()) {
-            playEntry(subSceneQueue.poll());
-        } else {
-            SwingUtilities.invokeLater(this::advanceScene);
-        }
+        advanceScene();
     }
 
-    public int getCurrentSceneIndex() {
-        return gameAPI.getDialogueScene();
-    }
+    public int     getCurrentSceneIndex() { return sceneIndex; }
+    public Segment getCurrentSegment()    { return segment;    }
+    public void    setCurrentSegment(Segment segment){ this.segment = segment; }
+    public void setCurrentSceneIndex(int idx){ sceneIndex = idx; }
 
-    public Segment getCurrentSegment() {
-        return convertSegment(gameAPI.getCurrentSegment());
-    }
-
-    public void playEndingScenes(SceneEntry[] endingScenes) {
-        if (endingScenes == null || endingScenes.length == 0) return;
-        subSceneQueue.clear();
-        for (SceneEntry scene : endingScenes) {
-            subSceneQueue.add(scene);
-        }
-        playEntry(subSceneQueue.poll());
-    }
-
-    public boolean isQueueEmpty() {
-        return subSceneQueue.isEmpty();
-    }
-
-    // ── Internal ─────────────────────────────────────────────────────────────
     private void loadScene(int index) {
         SceneEntry[] scenes = getCurrentScenes();
-        System.out.println("Loading scene index: " + index + " of " + scenes.length);
-        
+        System.out.println("!!!!!!!!!!!!!!! SCENE INDEX: " + index);
         if (index >= scenes.length) {
             delegate.onSceneEnd();
-            
-            Segment currentSeg = getCurrentSegment();
-            switch (currentSeg) {
-                case MORNING -> delegate.onMorningComplete();
-                case AFTERNOON -> delegate.onAfternoonComplete();
-                case EVENING -> delegate.onEveningComplete();
-                case ENDING -> delegate.onEndingComplete();
-            }
-            return;
+            if (segment == Segment.MORNING) delegate.onMorningComplete();
+            else if (segment == Segment.AFTERNOON) delegate.onAfternoonComplete();
+            else if (segment == Segment.EVENING) delegate.onEveningComplete();
+            else delegate.onEndingComplete();
+            return; 
         }
         playEntry(scenes[index]);
     }
 
-    private SceneEntry[] getCurrentScenes() {
-        Segment currentSeg = getCurrentSegment();
-        
-        return switch (currentSeg) {
-            case MORNING -> dayScript.getMorningScenes();
-            case AFTERNOON -> dayScript.getAfternoonScenes();
-            case EVENING -> dayScript.getEveningScenes();
-            case ENDING -> {
-                if (activeRoute != null) {
-                    yield activeRoute.getEndingScene(lpStorage.getActiveLP());
-                } else {
-                    yield new SceneEntry[0];
-                }
-            }
-        };
-    }
 
     private void playEntry(SceneEntry scene) {
-        if (scene == null) {
-            advanceScene();
-            return;
-        }
-
         switch (scene.type) {
             case SceneEntry.TYPE_NARRATOR -> {
                 delegate.showBackground(scene.background);
                 delegate.showSprite("none");
                 delegate.showNarrator(scene.text);
             }
-
             case SceneEntry.TYPE_DIALOGUE -> {
                 delegate.showBackground(scene.background);
                 delegate.showSprite(scene.spriteSpec);
                 delegate.showDialogue(scene.speaker, scene.text);
             }
-
             case SceneEntry.TYPE_IDENTITY -> {
                 delegate.showIdentityCreation(this::advanceScene);
             }
-
             case SceneEntry.TYPE_CHOICE -> {
-                ChoiceEntry[] choices = dayScript.getChoicesForScene(
-                    getCurrentSceneIndex(), 
-                    getCurrentSegment().name()
-                );
+                ChoiceEntry[] choices = dayScript.getChoicesForScene(sceneIndex, segment.name());
                 if (choices == null) {
                     advanceScene();
                     return;
@@ -196,41 +173,24 @@ public class SceneManager {
                 delegate.showChoices(choices, () ->
                     SwingUtilities.invokeLater(this::advanceScene));
             }
-
             case SceneEntry.TYPE_CHOICE_MARKER -> {
-                ChoiceEntry[] choices = dayScript.getChoicesForMarker(scene.choiceId);
+                choiceID = scene.choiceId;
+                System.out.println("Choice marker encountered: " + choiceID);
+                ChoiceEntry[] choices = dayScript.getChoicesForMarker(choiceID);
+                subSceneIndex = 0;
                 if (choices == null) {
+                    System.out.println("No choices found for marker: " + choiceID);
                     advanceScene();
                     return;
                 }
                 delegate.showChoices(choices, () ->
                     SwingUtilities.invokeLater(this::advanceScene));
             }
-
             case SceneEntry.TYPE_ROUTE -> {
                 delegate.showRouteSelection();
             }
-
             default -> advanceScene();
         }
     }
 
-    // ── Helper: Convert between GameAPI.Segment and SceneManager.Segment ─────
-    private Segment convertSegment(GameAPI.Segment apiSegment) {
-        return switch (apiSegment) {
-            case MORNING -> Segment.MORNING;
-            case AFTERNOON -> Segment.AFTERNOON;
-            case EVENING -> Segment.EVENING;
-            case ENDING -> Segment.ENDING;
-        };
-    }
-
-    private GameAPI.Segment convertSegment(Segment smSegment) {
-        return switch (smSegment) {
-            case MORNING -> GameAPI.Segment.MORNING;
-            case AFTERNOON -> GameAPI.Segment.AFTERNOON;
-            case EVENING -> GameAPI.Segment.EVENING;
-            case ENDING -> GameAPI.Segment.ENDING;
-        };
-    }
 }

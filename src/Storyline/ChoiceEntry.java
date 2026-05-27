@@ -5,15 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChoiceEntry {
-    public final String                 label;
-    public final int                    ppReward;
-    public final Map<String, Integer>   lpRewards;   // character → LP gain
-    public final SceneEntry[]           subScenes;
+    public final String              label;
+    public final Map<String, Integer> lpRewards;   // character → LP gain
+    public final int ppRewards;
+    public final SceneEntry[]        subScenes;
 
     // ── Backwards-compatible: single character LP ──────────────────────────
 
     public ChoiceEntry(String label, int lpReward, int ppReward) {
-        this(label, Collections.emptyMap(), ppReward,  new SceneEntry[0]);
+        this(label, Collections.emptyMap(), ppReward, new SceneEntry[0]);
     }
 
     public ChoiceEntry(String label, int lpReward, int ppReward, String lpCharacter) {
@@ -35,7 +35,7 @@ public class ChoiceEntry {
                        Map<String, Integer> lpRewards, int ppReward, SceneEntry... subScenes) {
         this.label     = label;
         this.lpRewards = Collections.unmodifiableMap(lpRewards);
-        this.ppReward  = ppReward;
+        this.ppRewards = ppReward;
         this.subScenes = subScenes != null ? subScenes : new SceneEntry[0];
     }
 
@@ -57,4 +57,6 @@ public class ChoiceEntry {
         }
         return m;
     }
+    
+    public SceneEntry[] getSubScenes(){ return subScenes; }
 }

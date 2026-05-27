@@ -1,5 +1,6 @@
 package Storyline;
 
+import Main.GameAPI.Segment;
 import Entities.Character;
 
 /**
@@ -8,21 +9,14 @@ import Entities.Character;
  */
 public class RouteManager {
 
-    public static final int ROUTE_LP_THRESHOLD = 10; // minimum LP to unlock a route option
+    public static final int ROUTE_LP_THRESHOLD = 15; // minimum LP to unlock a route option
 
-    // ── Route identification ──────────────────────────────────────────────────
     private final String routeName;
     private final int lpThresholdGood;
     private final int lpThresholdNeutral;
-    
-    // ── Per-character LP tracking (shared across all potential routes) ────────
     private final Character characterLP = new Character();
-    
-    // ── Active route state ────────────────────────────────────────────────────
     private RouteManager activeRoute = null;
     private String activeCharacter = null;
-
-    // ── Constructor ───────────────────────────────────────────────────────────
     public RouteManager(){ 
         routeName = ""; lpThresholdGood = 0; lpThresholdNeutral = 0;
     }    
@@ -33,88 +27,34 @@ public class RouteManager {
         this.lpThresholdNeutral = lpThresholdNeutral;
     }
     
-    // ── Getters for route properties ──────────────────────────────────────────
-    
     public String getRouteName() { return routeName; }
     public int getLpThresholdGood() { return lpThresholdGood; }
     public int getLpThresholdNeutral() { return lpThresholdNeutral; }
-    
-    // ── Abstract methods (implemented by each character route) ────────────────
-    
-    /** Returns the DayInterface script for a specific day in this route. */
-    public DayInterface getDayScript(int day){
-        return null; 
+    public DayInterface getDayScript(int day){ return null; }
+    public int getTotalDays(){ return -1; }
+    public SceneEntry[] getEndingScene(int finalLP){ return null; }
+    public boolean isRouteStarted(int day, Segment segment) {
+        return day >= 3 && segment == Segment.EVENING;
     }
-    
-    /** Returns the total number of days in this route (usually 7). */
-    public int getTotalDays(){
-        return -1;
-    }
-    
-    /** Returns the ending scene based on final LP. */
-    public SceneEntry[] getEndingScene(int finalLP){
-        return null; 
-    }
-    
-    /** Returns whether this route has started (Love Meter becomes visible). */
-    public boolean isRouteStarted(int day, SceneManager.Segment segment) {
-        return day >= 3 && segment == SceneManager.Segment.EVENING;
-    }
-    
-    // ── Per-character LP management (static-like, shared across all) ──────────
-    
     public Character getCharacterLP() { return characterLP; }
-    
-    /** Add LP to a specific character. Used by choices with lpCharacter set. */
-    public void addCharacterLP(String character, int amount) {
-        characterLP.add(character, amount);
-    }
-    
-    /** Returns LP for a specific character. */
-    public int getLPForCharacter(String character) {
-        return characterLP.get(character);
-    }
-    
-    /** Returns LP of the currently active route's character. */
-    public int getActiveLP() {
-        return activeCharacter != null ? characterLP.get(activeCharacter) : 0;
-    }
-    
-    // ── Active route management ───────────────────────────────────────────────
+    public void addCharacterLP(String character, int amount) { characterLP.add(character, amount); }
+    public void setCharacter(String character, int amount){ characterLP.setLp(character, amount); }
+    public int getLPForCharacter(String character) { return characterLP.get(character); }
+    public int getActiveLP() { return activeCharacter != null ? characterLP.get(activeCharacter) : 0; }
     
     public boolean hasActiveRoute() { return activeRoute != null; }
     public RouteManager getActiveRoute() { return activeRoute; }
     public String getActiveCharacter() { return activeCharacter; }
-    
-    /**
-     * Called when the player picks a character route on Day 3 Evening.
-     * Returns the Day 3 script for that route so the scene can continue.
-     */
+
     public DayInterface selectRoute(RouteManager route, String characterName) {
         this.activeRoute = route;
         this.activeCharacter = characterName;
         return route.getDayScript(3);
     }
     
-    public void clearRoute() {
-        activeRoute = null;
-        activeCharacter = null;
-    }
-    
-    // ── Route unlock logic ────────────────────────────────────────────────────
-    
-    /** True if the player has enough LP for this character's route option. */
-    public boolean isRouteUnlocked(String character) {
-        return characterLP.meetsThreshold(character, ROUTE_LP_THRESHOLD);
-    }
-    
-    /** True if NO character meets the threshold — secret "No one" option appears. */
-    public boolean allRoutesLocked() {
-        return !characterLP.anyMeetsThreshold(ROUTE_LP_THRESHOLD);
-    }
-    
-    // ── Reset ─────────────────────────────────────────────────────────────────
-    
+    public void clearRoute() { activeRoute = null; activeCharacter = null; }
+    public boolean isRouteUnlocked(String character) { return characterLP.meetsThreshold(character, ROUTE_LP_THRESHOLD); }
+    public boolean allRoutesLocked() { return !characterLP.anyMeetsThreshold(ROUTE_LP_THRESHOLD); }
     public void reset() {
         characterLP.reset();
         activeRoute = null;

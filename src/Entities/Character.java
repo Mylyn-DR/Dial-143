@@ -23,6 +23,10 @@ public class Character {
         return lpMap.getOrDefault(character, 0);
     }
     
+    public void setLp(String character, int amount){
+        lpMap.put(character, amount);
+    }
+    
     public boolean meetsThreshold(String character, int threshold) {
         return get(character) >= threshold;
     }

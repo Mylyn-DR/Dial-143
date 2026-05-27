@@ -9,15 +9,16 @@ import Main.GameAPI;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
+import javax.swing.SwingUtilities;
 import javax.swing.JOptionPane;
 
 public class ShopPanel extends JPanel {
 
-    private final GameAPI     gameAPI;
-    private final MainFrame   mainFrame;
+    private final MainFrame     mainPanel;
+    private final GameAPI       gameAPI;
     private final SettingsPanel settings;
     private final InventoryPanel inventory;
-    private ItemUse itemUse;   
+     private ItemUse itemUse;   
     private BackgroundLayer  bg;
     private TopBarComponents topBar;
     private ShopLayer        shopBox;
@@ -25,10 +26,9 @@ public class ShopPanel extends JPanel {
     public ItemUse getItemUse() {
         return itemUse;
     }
-    
-    public ShopPanel(GameAPI gameAPI, MainFrame mainFrame, SettingsPanel sharedSettings, InventoryPanel inventory) {
-        this.gameAPI = gameAPI;
-        this.mainFrame = mainFrame;
+    public ShopPanel(MainFrame mainPanel, GameAPI gameAPI, SettingsPanel sharedSettings, InventoryPanel inventory) {
+        this.mainPanel = mainPanel;
+        this.gameAPI = gameAPI; 
         this.settings  = sharedSettings;
         this.inventory = inventory;
         setPreferredSize(new Dimension(1280, 720));
@@ -39,16 +39,8 @@ public class ShopPanel extends JPanel {
     public void loadShop() {
         topBar.updateForShop(gameAPI.getCurrentDay());
         topBar.setPpValue(gameAPI.getPP());
-        
-        // Get LP from GameAPI using active character
-        int currentLP = 0;
-        if (gameAPI.hasActiveRoute()) {
-            String activeChar = gameAPI.getActiveCharacter();
-            currentLP = gameAPI.getLPForCharacter(activeChar);
-        }
-        topBar.setLpValue(currentLP);
+        topBar.setLpValue(gameAPI.getLP());
         topBar.setSalaryValue(gameAPI.getSalary());
-        
         shopBox.load();
         shopBox.setPlayerFunds(gameAPI.getSalary());
         shopBox.setNavButtonImages("back.png", "next.png");
@@ -61,34 +53,26 @@ public class ShopPanel extends JPanel {
         });
 
         shopBox.setOnExit(() -> {
-            gameAPI.setSalary(shopBox.getPlayerFunds());  
+            gameAPI.addSalary(shopBox.getPlayerFunds()-gameAPI.getSalary());  
             saveStats();
-            mainFrame.onShopComplete();
+            mainPanel.onShopComplete();
         });
     }
     
     private void saveStats() {
-        gameAPI.setPP(topBar.getCurrentPpValue());
-        gameAPI.setSalary(shopBox.getPlayerFunds());
-        
-        // Save LP if active route exists
-        if (gameAPI.hasActiveRoute()) {
-            String activeChar = gameAPI.getActiveCharacter();
-            gameAPI.setLPForCharacter(activeChar, topBar.getCurrentLpValue());
-        }
+//        gameAPI.setPP(topBar.getCurrentPpValue());
+//        gameAPI.setSalary(shopBox.getPlayerFunds());  
     }
 
     private void initializeLayers() {
         bg = new BackgroundLayer();
         bg.setBackgroundFromFile("ConvenienceStore.jpg");
 
-        topBar = new TopBarComponents(gameAPI);
+        topBar = new TopBarComponents(mainPanel);
         topBar.setSettingsPanel(settings);
         topBar.setParentScreen("shop");
         topBar.setInventoryPanel(inventory);
         shopBox = new ShopLayer();
-
-        itemUse = new ItemUse(gameAPI, topBar, null);
 
         add(topBar);
         add(shopBox);

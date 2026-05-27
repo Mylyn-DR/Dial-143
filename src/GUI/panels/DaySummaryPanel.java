@@ -2,7 +2,6 @@ package GUI.panels;
 
 import GUI.panels.universalComponents.*;
 import GUI.panels.InventoryPanel;
-import Entities.*;
 import Main.GameAPI;
 import java.awt.Dimension;
 import javax.swing.JPanel;
@@ -10,21 +9,18 @@ import javax.swing.OverlayLayout;
 
 public class DaySummaryPanel extends JPanel {
 
-    private final GameAPI       gameAPI;
+    private final MainFrame mainPanel;
+    private GameAPI gameAPI; 
+
     private final SettingsPanel settings;
     private final InventoryPanel inventory;
 
     private BackgroundLayer  bg;
     private TopBarComponents topBar;
     private DaySummaryLayer  summaryLayer;
-    private ItemUse itemUse;
-
-
-    public ItemUse getItemUse() {
-        return itemUse;
-    }
     
-    public DaySummaryPanel(GameAPI gameAPI, SettingsPanel sharedSettings, InventoryPanel inventory) {
+    public DaySummaryPanel(MainFrame mainPanel, GameAPI gameAPI, SettingsPanel sharedSettings, InventoryPanel inventory) {
+        this.mainPanel = mainPanel;
         this.gameAPI = gameAPI;
         this.settings  = sharedSettings;
         this.inventory = inventory;
@@ -33,25 +29,18 @@ public class DaySummaryPanel extends JPanel {
         initializeLayers();
     }
     
-    public void loadSummary(int ppGained, int lpGained, int salaryGained,
-                            int callsDone, Runnable onEndDay, Runnable onGoToShop) {
+    //edit this one to fetch from gameAPI/gamestate
+    public void loadSummary(Runnable onEndDay, Runnable onGoToShop) {
         topBar.setPpValue(gameAPI.getPP());
-        
-        // Get LP from GameAPI using active character
-        int currentLP = 0;
-        if (gameAPI.hasActiveRoute()) {
-            String activeChar = gameAPI.getActiveCharacter();
-            currentLP = gameAPI.getLPForCharacter(activeChar);
-        }
-        topBar.setLpValue(currentLP);
+        topBar.setLpValue(gameAPI.getLP());
         topBar.setSalaryValue(gameAPI.getSalary());
         topBar.setDayInfo(gameAPI.getCurrentDay(), "Day Summary");
         topBar.updateForSummary(gameAPI.getCurrentDay());
 
         summaryLayer.load(
             gameAPI.getCurrentDay(),
-            ppGained, lpGained, salaryGained, callsDone,
-            gameAPI.getPP(), currentLP, gameAPI.getSalary(),
+            gameAPI.getPpGained(), gameAPI.getLpGained(), gameAPI.getSalaryGained(), 
+            gameAPI.getCallsCompleted(), gameAPI.getPP(), gameAPI.getLP(), gameAPI.getSalary(),
             onEndDay, onGoToShop
         );
     }
@@ -59,13 +48,13 @@ public class DaySummaryPanel extends JPanel {
     private void initializeLayers() {
         bg = new BackgroundLayer();
         bg.setBackgroundFromFile("lightBG.jpg");
-        itemUse = new ItemUse(gameAPI, topBar, null);
 
-        topBar = new TopBarComponents(gameAPI);
+        topBar = new TopBarComponents(mainPanel);
         topBar.setSettingsPanel(settings);
         topBar.setParentScreen("daySummary");
         topBar.setInventoryPanel(inventory);
         
+
         summaryLayer = new DaySummaryLayer();
 
         add(topBar);

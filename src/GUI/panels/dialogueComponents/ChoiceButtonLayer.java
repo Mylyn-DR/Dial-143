@@ -52,7 +52,7 @@ public class ChoiceButtonLayer extends JPanel {
                     }
                 });
             } else {
-                setText("🔒 " + text);
+                setText("X " + text);
             }
         }
         
@@ -161,8 +161,8 @@ public class ChoiceButtonLayer extends JPanel {
             btn.setBackground(btn.normalColor);
             btn.setForeground(btn.unlocked ? textUnlocked : textLocked);
             
-            String currentText = btn.getText().replace("🔒 ", "");
-            btn.setText(btn.unlocked ? currentText : "🔒 " + currentText);
+            String currentText = btn.getText().replace("X ", "");
+            btn.setText(btn.unlocked ? currentText : "X " + currentText);
             
             for (ActionListener al : btn.getActionListeners()) {
                 btn.removeActionListener(al);
@@ -205,8 +205,7 @@ public class ChoiceButtonLayer extends JPanel {
     }
     
     public void show2Choices(String choice1, String node1, 
-                             String choice2, String node2) 
-    {
+                             String choice2, String node2) {
         clearChoices();
         addChoice(choice1, node1);
         addChoice(choice2, node2);
@@ -215,8 +214,7 @@ public class ChoiceButtonLayer extends JPanel {
     
     public void show3Choices(String choice1, String node1,
                              String choice2, String node2,
-                             String choice3, String node3) 
-    {
+                             String choice3, String node3) {
         clearChoices();
         addChoice(choice1, node1);
         addChoice(choice2, node2);
@@ -227,8 +225,7 @@ public class ChoiceButtonLayer extends JPanel {
     public void show4Choices(String choice1, String node1,
                              String choice2, String node2,
                              String choice3, String node3,
-                             String choice4, String node4) 
-    {
+                             String choice4, String node4) {
         clearChoices();
         addChoice(choice1, node1);
         addChoice(choice2, node2);
@@ -238,8 +235,7 @@ public class ChoiceButtonLayer extends JPanel {
     }
     
     public void show2ChoicesWithLock(String choice1, String node1, boolean unlocked1,
-                                     String choice2, String node2, boolean unlocked2) 
-    {
+                                     String choice2, String node2, boolean unlocked2) {
         clearChoices();
         addChoice(choice1, node1, unlocked1);
         addChoice(choice2, node2, unlocked2);
@@ -248,8 +244,7 @@ public class ChoiceButtonLayer extends JPanel {
     
     public void show3ChoicesWithLock(String choice1, String node1, boolean unlocked1,
                                      String choice2, String node2, boolean unlocked2,
-                                     String choice3, String node3, boolean unlocked3) 
-    {
+                                     String choice3, String node3, boolean unlocked3) {
         clearChoices();
         addChoice(choice1, node1, unlocked1);
         addChoice(choice2, node2, unlocked2);
@@ -260,8 +255,7 @@ public class ChoiceButtonLayer extends JPanel {
     public void show4ChoicesWithLock(String choice1, String node1, boolean unlocked1,
                                      String choice2, String node2, boolean unlocked2,
                                      String choice3, String node3, boolean unlocked3,
-                                     String choice4, String node4, boolean unlocked4) 
-    {
+                                     String choice4, String node4, boolean unlocked4) {
         clearChoices();
         addChoice(choice1, node1, unlocked1);
         addChoice(choice2, node2, unlocked2);

@@ -10,11 +10,13 @@ import Main.GameAPI;
 public class TitleScreenPanel extends JPanel {
  
     private MainFrame             mainPanel;
+    private GameAPI               gameAPI;
     private BackgroundLayer       bg;
     private TitleScreenComponents buttons;
  
-    public TitleScreenPanel(MainFrame mainPanel) {
+    public TitleScreenPanel(MainFrame mainPanel, GameAPI gameAPI) {
         this.mainPanel = mainPanel;
+        this.gameAPI = gameAPI; 
         AudioPlayer.getInstance().play(AudioPlayer.Track.INTRO);
         initComponents();
         initializeLayers();
@@ -29,7 +31,7 @@ public class TitleScreenPanel extends JPanel {
         buttons.setButtonImage("btn.png");
  
         buttons.setPlayAction(() -> {
-            mainPanel.resetStats();
+            gameAPI.resetStats();
             mainPanel.showScreen("dialogue");
         });
  
@@ -38,14 +40,13 @@ public class TitleScreenPanel extends JPanel {
                 mainPanel.showSave("title");
             }
         });
-        
+ 
         buttons.setCreditsAction(() -> {
             if (mainPanel.getCreditsPanel() != null) {
                 mainPanel.getCreditsPanel().showAsPopup();
             }
         });
-
- 
+        
         buttons.setExitAction(() -> System.exit(0));
  
         add(buttons);

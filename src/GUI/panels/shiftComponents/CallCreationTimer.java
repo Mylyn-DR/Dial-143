@@ -1,6 +1,5 @@
 package GUI.panels.shiftComponents;
 
-import Main.CallLoader;
 import Entities.Call;
 import Main.GameAPI;
 import javax.swing.*;
@@ -15,7 +14,7 @@ public class CallCreationTimer extends JPanel {
     private int      callNumber          = 0;
     private String[] testChoiceLabels    = {};
 
-    private CallLoader callLoader;
+    private GameAPI gameAPI;
     private Call[] currentShiftCalls;
     private int currentCallIndex;
     private Call currentCall;
@@ -62,16 +61,14 @@ public class CallCreationTimer extends JPanel {
 
     private Rectangle skipButtonRect;
     private int       hoveredSkip = -1;
-    
-    private GameAPI gameAPI;
-    
+
     public CallCreationTimer(GameAPI gameAPI) {
         setOpaque(false);
         setLayout(null);
         setPreferredSize(new Dimension(1280, 720));
-       
+        
         this.gameAPI = gameAPI;
-        callLoader = gameAPI.getCallLoader();
+        resetRemainingCalls();
         
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override public void mouseMoved(MouseEvent e) { updateHover(e.getPoint()); }
@@ -92,9 +89,9 @@ public class CallCreationTimer extends JPanel {
         this.onCallComplete = cb;
     }
 
+    public int getCallIndex(){ return currentCallIndex; }
     public void resetRemainingCalls() {
-        int randomShiftIndex = (int) (Math.random() * 5); // Assuming 5 shifts
-        currentShiftCalls = callLoader.getCallShift(randomShiftIndex);
+        currentShiftCalls = gameAPI.getCallShift();
         remainingCalls.clear();
         for (Call call : currentShiftCalls) {
             remainingCalls.add(call);
@@ -441,6 +438,7 @@ public class CallCreationTimer extends JPanel {
                 delayTimer.start();
             }
         });
+        gameAPI.setCallsCompleted(3-remainingCalls.size());
         responseTimer.start();
         repaint();
     }

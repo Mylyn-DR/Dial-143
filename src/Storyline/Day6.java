@@ -47,6 +47,9 @@ public class Day6 implements DayInterface {
         SceneEntry.dialogue("Cloma", "I'm honored. Thank you.", "single:Cloma_Smile", "EventStage.jpg"),
         SceneEntry.dialogue("Sir Khai", "And the Leadership Excellence award goes to… Rosario!", "single:Khai_EyesOpen", "EventStage.jpg"),
         SceneEntry.dialogue("Rosario", "(slightly flustered) Thank you… I appreciate it.", "single:Rosario_Blushing", "EventStage.jpg"),
+        SceneEntry.narrator("Then the room was quiet. It was the announcement of another award.", "EventStage.jpg"),
+        SceneEntry.dialogue("Sir Khai", "And this week's 'Outstanding Employee' award goes to…", "single:Khai_EyesOpen", "EventStage.jpg"),
+         SceneEntry.narrator("Drum rolls.", "EventStage.jpg"),
         SceneEntry.choiceMarker("AWARD_CHOICE"),
         SceneEntry.narrator("The afternoon slowly turns into evening.", "EventStage.jpg"),
         SceneEntry.narrator("Music plays softly while coworkers laugh, eat, and talk.", "EventStage.jpg"),
@@ -87,7 +90,7 @@ public class Day6 implements DayInterface {
     private ChoiceEntry[] getHighAwardChoices() {
         return new ChoiceEntry[]{
             new ChoiceEntry("Accept Award", 0,0,
-                SceneEntry.dialogue("Sir Khai", "And this week's 'Outstanding Employee' award goes to… {name}!", "single:Khai_EyesOpen", "EventStage.jpg"),
+                SceneEntry.dialogue("Sir Khai", "{name}!", "single:Khai_EyesOpen", "EventStage.jpg"),
                 SceneEntry.narrator("The room fills with applause.", "EventStage.jpg"),
                 SceneEntry.dialogue("Amaya", "Wait—that's you!", "single:Amaya_Smile", "EventStage.jpg"),
                 SceneEntry.dialogue("Cloma", "Congratulations!", "single:Cloma_Smile", "EventStage.jpg"),

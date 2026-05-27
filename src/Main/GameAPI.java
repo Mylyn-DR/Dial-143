@@ -1,288 +1,262 @@
 /*
- * Click nbfs
- * Click nbfs
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Main;
 
 import Entities.AudioPlayer;
+import Entities.Call;
 import Entities.Item;
 import Entities.Player;
+import GUI.panels.InventoryPanel;
+import GUI.panels.SavePanel;
+import Storyline.AmayaRoute.AmayaRoute;
+import Storyline.CeleresRoute.CeleresRoute;
+import Storyline.ClomaRoute.ClomaRoute;
+import Storyline.Day1;
+import Storyline.Day2;
+import Storyline.Day3;
+import Storyline.Day6;
 import Storyline.DayInterface;
+import Storyline.RosarioRoute.RosarioRoute;
 import Storyline.RouteManager;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import java.util.List;
-import java.util.Map;
-
+/**
+ *
+ * @author Dell
+ */
 public class GameAPI {
     
-    private final GameData gameData;
-    private final GameState gameState;
-    private final SaveManager saveManager; 
-    
     public GameAPI() {
-        gameData = new GameData();
-        gameState = new GameState();
-        saveManager = new SaveManager(this);
+        loadAllRoutes();
+        playerInventory = new HashMap<>();
+        callLoader = new CallLoader();
     }
     
-    // ==================== ACCESS TO INTERNAL OBJECTS (use sparingly) ====================
-    public GameData getGameData() { return gameData; }
-    public GameState getGameState() { return gameState; }
+    private HashMap<Integer, DayInterface> allDays;
+    private HashMap<String, RouteManager> allRoutes;
+    private HashMap<String, Integer> playerInventory;
+    private RouteManager lpStorage;      
+    private RouteManager activeRoute;
+    private CallLoader callLoader;
     
-    // ==================== PLAYER IDENTITY ====================
-    public String getPlayerName() { return gameState.getPlayerName(); }
-    public String getPlayerGender() { return gameState.getPlayerGender(); }
-    public String getPlayerPronoun() { return gameState.getPlayerPronoun(); }
-    public Player getPlayerProfile() { return gameState.getPlayerProfile(); }
+    private Player playerProfile = new Player();
     
-    public void setPlayerIdentity(String name, String gender, String pronoun) {
-        gameState.setPlayerIdentity(name, gender, pronoun);
-    }
-    
-    // ==================== STATS ====================
-    public int getPP() { return gameState.getPP(); }
-    public void setPP(int val) { gameState.setPP(val); }
-    public void addPP(int amount) { gameState.addPP(amount); }
-    
-    public int getSalary() { return gameState.getSalary(); }
-    public void setSalary(int val) { gameState.setSalary(val); }
-    public void addSalary(int amount) { gameState.addSalary(amount); }
-    
-    // ==================== LP MANAGEMENT ====================
-    public int getLP() { return gameState.getLP(); }
-    public void setLP(int val) { gameState.setLP(val); }
-    public void addLP(int amount) { gameState.addLP(amount); }
-    
-    public int getLPForCharacter(String character) { 
-        return gameState.getLPForCharacter(character); 
-    }
-    
-    public void setLPForCharacter(String character, int value) { 
-        gameState.setLPForCharacter(character, value); 
-    }
-    
-    public void addLPForCharacter(String character, int amount) { 
-        gameState.addLPForCharacter(character, amount); 
-    }
-    
-    public void addLPToActive(int amount) { 
-        gameState.addLPToActive(amount); 
-    }
-    
-    public int getActiveLP() { 
-        return gameState.getActiveLP(); 
-    }
-    
-    // Route unlock checks
-    public boolean isRouteUnlocked(String character) { 
-        return gameState.isRouteUnlocked(character); 
-    }
-    
-    public boolean allRoutesLocked() { 
-        return gameState.allRoutesLocked(); 
-    }
-    
-    // ==================== ROUTE MANAGEMENT ====================
-    public RouteManager getActiveRoute() { 
-        return gameState.getActiveRoute(); 
-    }
-    
-    public void setActiveRoute(String characterId) {
-        RouteManager route = gameData.getAllRoutes().get(characterId);
-        gameState.setActiveRoute(route);
-        gameState.setActiveCharacter(characterId);
-    }
-    
-    public String getActiveCharacter() { 
-        return gameState.getActiveCharacter(); 
-    }
-    
-    public boolean hasActiveRoute() { 
-        return gameState.hasActiveRoute(); 
-    }
-    
-    public void clearRoute() { 
-        gameState.clearRoute(); 
-    }
-    
-    // Direct access to RouteManager (for advanced operations)
-    public RouteManager getLpStorage() { 
-        return gameState.getLpStorage(); 
-    }
-    
-    // ==================== DAY / PROGRESS ====================
-    public int getCurrentDay() { return gameState.getCurrentDay(); }
-    public void setCurrentDay(int day) { gameState.setCurrentDay(day); }
-    public void incrementDay() { gameState.incrementDay(); }
-    
-    public int getCallsCompletedToday() { return gameState.getCallsCompletedToday(); }
-    public void setCallsCompletedToday(int val) { gameState.setCallsCompletedToday(val); }
-    public void incrementCallsCompleted() { gameState.incrementCallsCompleted(); }
-    public void resetCallsCompleted() { gameState.resetCallsCompleted(); }
+    private int ppAtShiftStart;
+    private int lpAtShiftStart;
+    private int salaryAtShiftStart;
     
     public enum EndingType { GOOD, BAD, NEUTRAL }
     private EndingType endingType = EndingType.NEUTRAL;
+    
+    public enum Segment { MORNING, AFTERNOON, EVENING, ENDING }
+    private Segment currentSegment = Segment.MORNING;
+    
+    private int     dialogueScene = 0;
+    private boolean dialogueDone  = false;
+    private int     subSceneIndex = 0;
+    private String  choiceID = "null";
+    private String  chosenChoiceID = "null";
+    
+    private int currentDay                = 1;
+    private int callsCompletedToday       = 0;
+    public static final int CALLS_PER_DAY = 3;
+    public static final int TOTAL_DAYS    = 7;
+    
+    private int sharedPP     = 0;
+    private int sharedSalary = 0;
+    
+    private DayInterface currentDayScript;
+    
+    public void resetStats() {
+        System.out.println("-----------RESETTING STATS------------");
+        sharedPP            = 0;
+        sharedSalary        = 0;
+        currentDay          = 1;
+        callsCompletedToday = 0;
+        dialogueScene       = 0;
+        subSceneIndex       = 0;
+        choiceID            = "null";
+        chosenChoiceID      = "null";
+        dialogueDone        = false;
+        currentSegment      = Segment.MORNING;
+        playerProfile       = new Player();
+        ppAtShiftStart      = 0;
+        lpAtShiftStart      = 0;
+        salaryAtShiftStart  = 0;
+        if (activeRoute != null) activeRoute.reset();
+        activeRoute = null;
+        playerInventory.clear();
+        lpStorage.reset();
+        callLoader.shuffleCalls();
+        currentDayScript    = scriptForDay(currentDay);
+    }
+    
+    private void loadAllRoutes(){
+        allRoutes = new HashMap<>();
+        allDays = new HashMap<>();
+        lpStorage = new RouteManager();   // ← This stores LP
+        activeRoute = null;               // ← No route yet
 
+        allRoutes.put("Amaya", new AmayaRoute());
+        allRoutes.put("Celeres", new CeleresRoute());
+        allRoutes.put("Cloma", new ClomaRoute());
+        allRoutes.put("Rosario", new RosarioRoute());
+        
+        allDays.put(1, new Day1());
+        allDays.put(2, new Day2());
+        allDays.put(3, new Day3());
+        allDays.put(6, new Day6());
+    }
+    
+    public Call[] getCallShift(){ return callLoader.getCallShift(currentDay); }
+    public RouteManager getCharacterRoute(String character){ return allRoutes.get(character); }
+    public RouteManager getLpStorage() { return lpStorage; }
+    public RouteManager getActiveRoute() { return activeRoute; }
+    public void setActiveRoute(String characterId) { activeRoute = allRoutes.get(characterId); }
+    
+    public int getPpGained() { return ppAtShiftStart; }
+    public int getLpGained() { return lpAtShiftStart; }
+    public int getSalaryGained() { return salaryAtShiftStart; }
+    public void setPpGained(int pp){ ppAtShiftStart=pp; }
+    public void setSalaryGained(int salary){ salaryAtShiftStart=salary; }
+    public void addPpGained(int pp){ ppAtShiftStart+=pp; }
+    public void addSalaryGained(int salary){ salaryAtShiftStart+=salary; }
+    
+    public Player  getPlayerProfile() { return playerProfile; }
+    public String  getPlayerName()    { return playerProfile.getName(); }
+    public String  getPlayerGender()  { return playerProfile.getGender(); }
+    public String  getPlayerPronoun() { return playerProfile.getPronoun(); }
+
+    public void setPlayerIdentity(String name, String gender, String pronoun) {
+        playerProfile.set(name, gender, pronoun);
+    }
+    
     public void setEndingType(EndingType t) { this.endingType = t; }
-    public EndingType getEndingType() { return endingType; }
+    public EndingType getEndingType()       { return endingType; }
     
-    // ==================== SEGMENT ====================
-    public enum Segment { 
-        MORNING, AFTERNOON, EVENING, ENDING;
-        public String toString() {
-            return switch (this) {
-                case MORNING -> "Morning";
-                case AFTERNOON -> "Afternoon";
-                case EVENING -> "Evening";
-                case ENDING -> "Ending";
-            };
-        }
-        public static Segment fromString(String text) {
-            if (text == null) return MORNING;
-            return switch (text.toUpperCase()) {
-                case "MORNING" -> MORNING;
-                case "AFTERNOON" -> AFTERNOON;
-                case "EVENING" -> EVENING;
-                case "ENDING" -> ENDING;
-                default -> MORNING;
-            };
+    public int  getPP()          { return sharedPP; }
+    public int  getSalary()      { return sharedSalary; }
+    public void setPP(int v)     { sharedPP = v; }
+    public void setSalary(int v) { sharedSalary = v; }
+    public int getLP() {
+        if (lpStorage.hasActiveRoute()) return lpStorage.getActiveLP();
+        return 0;
+    }
+    public void setLP(int v) {
+        if (lpStorage.hasActiveRoute()) {
+            String activeChar = lpStorage.getActiveCharacter();
+            setLPForCharacter(activeChar, v);
         }
     }
-    
-    public Segment getCurrentSegment(){ return Segment.fromString(gameState.getCurrentSegment());}
-    public void setCurrentSegment(Segment segment) {gameState.setCurrentSegment(segment.name());}
-    
-    // ==================== DIALOGUE PROGRESS ====================
-    public int getDialogueScene() { return gameState.getDialogueScene(); }
-    public void setDialogueScene(int scene) { gameState.setDialogueScene(scene); }
-    public boolean isDialogueDone() { return gameState.isDialogueDone(); }
-    public void setDialogueDone(boolean done) { gameState.setDialogueDone(done); }
-    
-    // ==================== INVENTORY ====================
-    public List<Item> getInventory() { return gameState.getInventory(); }
-    
-    public void addItemToInventory(Item item) { 
-        gameState.addItem(item); 
+    public void addPP(int v){ sharedPP += v; ppAtShiftStart += v; }
+    public void addSalary(int v){ sharedSalary += v; salaryAtShiftStart += v; }
+    public void addLP(int amount){
+        if (lpStorage.hasActiveRoute())
+            addLPForCharacter(lpStorage.getActiveCharacter(), amount); 
     }
-    
-    public boolean removeItemFromInventory(Item item) { 
-        return gameState.removeItem(item); 
-    }
-    
-    public boolean hasItemInInventory(String itemName) { 
-        return gameState.hasItem(itemName); 
-    }
-    
-    public void clearInventory() { 
-        gameState.clearInventory(); 
-    }
-    
-    // ==================== SHOP ====================
-    public List<Item> getShopItems() { 
-        return gameData.getShopItems(); 
-    }
-    
-    // ==================== STATIC DATA ACCESS ====================
-    public Map<String, RouteManager> getAllRoutes() { 
-        return gameData.getAllRoutes(); 
-    }
-    
-    public Map<String, Item> getItemCatalog() { 
-        return gameData.getItemCatalog(); 
-    }
-    
-    public Map<String, String> getSpriteMappings() { 
-        return gameData.getSpriteMappings(); 
-    }
-    
-    public List<String> getBackgroundFiles() { 
-        return gameData.getBackgroundFiles(); 
-    }
-    
-    public CallLoader getCallLoader() { 
-        return gameData.getCallLoader(); 
-    }
-    
-    // ==================== ITEM EFFECT BONUSES ====================
-    public int getPPMultiplierBonus() { 
-        return gameState.getPPMultiplierBonus(); 
-    }
-    
-    public void addPPMultiplierBonus(int amount) { 
-        gameState.addPPMultiplierBonus(amount); 
-    }
-    
-    public int getLPMultiplierDailyBonus() { 
-        return gameState.getLPMultiplierDailyBonus(); 
-    }
-    
-    public void addLPMultiplierDailyBonus(int amount) { 
-        gameState.addLPMultiplierDailyBonus(amount); 
-    }
-    
-    public boolean isHintAvailable() { 
-        return gameState.isHintAvailable(); 
-    }
-    
-    public void setHintAvailable(boolean available) { 
-        gameState.setHintAvailable(available); 
-    }
-    
-    public void resetPerCallBonuses() { 
-        gameState.resetPerCallBonuses(); 
-    }
-    
-    public void resetPerDayBonuses() { 
-        gameState.resetPerDayBonuses(); 
-    }
-    
-    public int applyPPMultiplier(int rawPP) { 
-        return gameState.applyPPMultiplier(rawPP); 
-    }
-    
-    // ==================== CONSTANTS (from GameData) ====================
-    public int getBaseCallTimerSeconds() { return GameData.BASE_CALL_TIMER_SECONDS; }
-    public int getTotalDays() { return GameData.TOTAL_DAYS; }
-    public int getCallsPerDay() { return GameData.CALLS_PER_DAY; }
-    public int getRouteLPThreshold() { return GameData.ROUTE_LP_THRESHOLD; }
-    
-    // ==================== UTILITY ====================
-    public String resolvePlaceholders(String text) {
-        return GameData.resolvePlaceholders(
-            text, 
-            getPlayerName(), 
-            getPlayerPronoun()
-        );
-    }
-    
-    // ==================== RESET ====================
-    public void resetGame() {
-        gameState.reset();
-    }
-    
-    // ==================== DAY SCRIPT ====================
-    public DayInterface scriptForDay(int day) {
-        if (day == 1) return new Storyline.Day1();
-        if (day == 2) return new Storyline.Day2();
-        if (day == 3) return new Storyline.Day3();
-        if (hasActiveRoute()) {
-            return getActiveRoute().getDayScript(day);
-        }
-        return new Storyline.Day3();
-    }
-    
-    // ==================== SAVE MANAGER ====================
-    public void saveGame(int slot) { saveManager.saveGame(gameState, slot); }
-    public boolean loadGame(int slot) {return saveManager.loadGame(gameState, slot);}
-    public boolean saveExists(int slot) {return saveManager.saveExists(slot);}
-    public String getSaveInfo(int slot) {return saveManager.getSaveInfo(slot);}
-    public void deleteSave(int slot) {saveManager.deleteSave(slot);}
-    
-    public boolean isChoiceConsumed(String choiceId) {
-    return gameState.isChoiceConsumed(choiceId);
-}
 
-public void consumeChoice(String choiceId) {
-    gameState.consumeChoice(choiceId);
-}
+    public int getLPForCharacter(String character) { return lpStorage.getLPForCharacter(character); }
+    public void setLPForCharacter(String character, int value) { lpStorage.setCharacter(character, value); }
+    public boolean addLPForCharacter(String character, int value){
+        lpStorage.addCharacterLP(character, value);
+        System.out.println("AMAYA: " + lpStorage.getLPForCharacter("Amaya")); 
+        System.out.println("CELERES: " + lpStorage.getLPForCharacter("Celeres")); 
+        System.out.println("CLOMA: " + lpStorage.getLPForCharacter("Cloma")); 
+        System.out.println("ROSARIO: " + lpStorage.getLPForCharacter("Rosario")); 
+        if(lpStorage.hasActiveRoute()){ lpAtShiftStart += value; return true; } 
+        return false;
+    }
+
+    public int  getCurrentDay()           { return currentDay; }
+    public void setCurrentDay(int day)    { this.currentDay = day; }
+    public void setCallsCompleted(int num){ callsCompletedToday = num; }
+    public int  getCallsCompleted()       { return callsCompletedToday; }
+
+    public int     getDialogueScene()          { return dialogueScene; }
+    public void    setDialogueScene(int scene) { dialogueScene = scene; }
+    public boolean isDialogueDone()            { return dialogueDone; }
+    public void    setDialogueDone(boolean v)  { dialogueDone = v; }
+    public int     getSubSceneIndex()          { return subSceneIndex; }
+    public void    setSubSceneIndex(int idx)   { subSceneIndex = idx; }
+    public String  getChoiceID()               { return choiceID; }
+    public void    setChoiceID(String id)      { choiceID = id; }
+    public String  getChosenChoiceID()         { return chosenChoiceID; }
+    public void    setChosenChoiceID(String id){ chosenChoiceID = id; }
+
+    public Segment  getCurrentSegment()          { return currentSegment; }
+    public void     setCurrentSegment(Segment s) { currentSegment = s; }
+
+    public void setCurrentDayScript(DayInterface currentDayScript){ this.currentDayScript = currentDayScript; }
+    public DayInterface getCurrentDayScript(){ return currentDayScript; }
+    
+    public DayInterface scriptForDay(int day) {
+        if (activeRoute != null) { return activeRoute.getDayScript(day); } 
+        return allDays.get(day);
+    }
+    
+    public enum Screen{ DIALOGUE, SHIFT, SUMMARY, GAMECOMPLETE, ENDING; }
+    public Screen onMorningComplete() {
+        System.out.println("ON MORNING COMPLETE");
+        dialogueScene = 0;
+        subSceneIndex = 0;
+        choiceID = "null";
+        chosenChoiceID = "null";
+        dialogueDone = false;
+        
+        // Check if this is Day 7 — play ending instead of CallShift
+        if (currentDay >= TOTAL_DAYS) { 
+            currentSegment = GameAPI.Segment.ENDING;             
+            return Screen.ENDING;
+        }
+
+        // SPECIAL CASE: Day 6 afternoon (company event)
+        if (currentDay == 6 && activeRoute != null) {
+            DayInterface day6 = allDays.get(6);
+            ((Day6)day6).setPlayerPP(getPP());
+            setCurrentDayScript(day6);
+            currentSegment = GameAPI.Segment.AFTERNOON;
+            return Screen.DIALOGUE;
+        }
+
+        // Normal CallShift
+        return Screen.SHIFT;
+    }
+
+    public Screen onAfternoonComplete() {
+        System.out.println("ON AFTERNOON COMPLETE");
+        if (currentSegment == Segment.ENDING) return Screen.GAMECOMPLETE;
+        if (currentDay == 6 && activeRoute != null) 
+            setCurrentDayScript(activeRoute.getDayScript(6));
+        currentSegment = Segment.EVENING;
+        dialogueScene = 0;
+        subSceneIndex = 0;
+        choiceID = "null";
+        chosenChoiceID = "null";
+        dialogueDone = false;
+        return Screen.DIALOGUE; 
+    }
+
+    public Screen onEndDay() {
+        System.out.println("ON EVENING COMPLETE");
+        dialogueScene = 0;
+        subSceneIndex = 0;
+        choiceID = "null";
+        chosenChoiceID = "null";
+        dialogueDone = false;
+        currentDay++;
+        callsCompletedToday = 0;
+        ppAtShiftStart = 0;
+        lpAtShiftStart = 0;
+        salaryAtShiftStart = 0;
+        
+        if (currentDay == TOTAL_DAYS){ currentSegment = GameAPI.Segment.ENDING; }
+        else { 
+            currentSegment = GameAPI.Segment.MORNING; 
+            setCurrentDayScript(scriptForDay(currentDay)); 
+        }
+        return Screen.DIALOGUE;
+    }
 }

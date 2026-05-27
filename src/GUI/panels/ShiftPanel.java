@@ -12,8 +12,8 @@ import java.awt.*;
  
 public class ShiftPanel extends JPanel {
  
+    private final MainFrame      mainPanel;
     private final GameAPI        gameAPI;
-    private final MainFrame      mainFrame;
     private final SettingsPanel  settings;
     private final InventoryPanel inventory;
     private BackgroundLayer      bg;
@@ -21,11 +21,13 @@ public class ShiftPanel extends JPanel {
     private TopBarComponents     topBar;
     private ItemUse              itemEffect;
 
-    public ShiftPanel(GameAPI gameAPI, MainFrame mainFrame, SettingsPanel sharedSettings, InventoryPanel inventory) {
-        this.gameAPI = gameAPI;
-        this.mainFrame = mainFrame;
+    public ShiftPanel(MainFrame mainPanel, GameAPI gameAPI, TopBarComponents topBar, ItemUse itemEffect, SettingsPanel sharedSettings, InventoryPanel inventory) {
+        this.mainPanel = mainPanel;
+        this.gameAPI = gameAPI; 
         this.settings  = sharedSettings;
         this.inventory = inventory;
+        this.itemEffect = itemEffect;
+        this.topBar = topBar;
         setPreferredSize(new Dimension(1280, 720));
         setLayout(new OverlayLayout(this));
         initializeLayers();
@@ -34,23 +36,21 @@ public class ShiftPanel extends JPanel {
     private void initializeLayers() {
         bg = new BackgroundLayer();
         bg.setBackgroundFromFile("MorningOffice.jpg");
- 
-        callBox = new CallCreationTimer(gameAPI);
-        topBar = new TopBarComponents(gameAPI);
         
-        itemEffect = new ItemUse(gameAPI, topBar, callBox);
- 
+        callBox = new CallCreationTimer(gameAPI);
+        itemEffect.setCallBox(callBox);
         callBox.onPointsAwarded((pp, salary) -> {
-            int originalPP = pp;
             int boostedPP = itemEffect.applyPPMultiplier(pp);
-
-            topBar.addPpPoints(boostedPP);
-            topBar.addSalaryPoints(salary);
+            
+            gameAPI.addPP(boostedPP); 
+            gameAPI.addSalary(salary);
+            topBar.setPpValue(gameAPI.getPP());
+            topBar.setSalaryValue(gameAPI.getSalary());
         });
 
         callBox.onCallComplete(() -> {
             itemEffect.resetPerCall();
- 
+            
             if (callBox.hasMoreCalls()) {
                 Timer t = new Timer(100, e -> {
                     callBox.loadTest();
@@ -59,11 +59,12 @@ public class ShiftPanel extends JPanel {
                         callBox.activateHint();
                     }
                 });
+                
                 t.setRepeats(false);
                 t.start();
             } else {
                 saveStats();
-                Timer t = new Timer(100, e -> mainFrame.onCallComplete());
+                Timer t = new Timer(100, e -> mainPanel.onAfternoonComplete());
                 t.setRepeats(false);
                 t.start();
             }
@@ -97,21 +98,12 @@ public class ShiftPanel extends JPanel {
         add(bg);
     }
     
-    public ItemUse getItemUse() {
-        return itemEffect;
-    }
- 
+    public ItemUse getItemUse() { return itemEffect; }
+    
     public void loadCall() {
         topBar.updateForShift(gameAPI.getCurrentDay());
         topBar.setPpValue(gameAPI.getPP());
-        
-        // Get LP from GameAPI using active character
-        int currentLP = 0;
-        if (gameAPI.hasActiveRoute()) {
-            String activeChar = gameAPI.getActiveCharacter();
-            currentLP = gameAPI.getLPForCharacter(activeChar);
-        }
-        topBar.setLpValue(currentLP);
+        topBar.setLpValue(gameAPI.getLP());
         topBar.setSalaryValue(gameAPI.getSalary());
         callBox.resetRemainingCalls();
         callBox.loadTest();
@@ -122,20 +114,16 @@ public class ShiftPanel extends JPanel {
     }
  
     private void saveStats() {
-        gameAPI.setPP(topBar.getCurrentPpValue());
-        gameAPI.setSalary(topBar.getCurrentSalaryValue());
-        
-        // Save LP if active route exists
-        if (gameAPI.hasActiveRoute()) {
-            String activeChar = gameAPI.getActiveCharacter();
-            gameAPI.setLPForCharacter(activeChar, topBar.getCurrentLpValue());
-        }
+        topBar.setPpValue(gameAPI.getPP());
+        topBar.setLpValue(gameAPI.getLP());
+        topBar.setSalaryValue(gameAPI.getSalary());
     }
  
     public void pauseTimer()       { callBox.pauseTimer(); }
     public void resumeTimer()      { callBox.resumeTimer(); }
     public boolean isTimerPaused() { return callBox.isTimerPaused(); }
 
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

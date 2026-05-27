@@ -1,5 +1,6 @@
 package GUI.panels.dialogueComponents; 
 
+import GUI.panels.MainFrame;
 import Main.GameAPI;
 import javax.swing.*;
 import java.awt.*;
@@ -7,6 +8,7 @@ import java.io.InputStream;
 
 public class DialogueBoxLayer extends JPanel {
     
+    private MainFrame mainFrame;
     private GameAPI gameAPI;
     private Font mulishFont; 
     private String speaker = "";
@@ -28,8 +30,9 @@ public class DialogueBoxLayer extends JPanel {
     private static final Color TEXT_COLOR = new Color(0, 0, 0, 255);
     private static final Color SPEAKER_TEXT_COLOR = new Color(0, 0, 0, 255);
 
-    public DialogueBoxLayer(GameAPI gameAPI) {  // ← Changed to GameAPI
-        this.gameAPI = gameAPI;
+    public DialogueBoxLayer(MainFrame mainFrame, GameAPI gameAPI) {
+        this.mainFrame = mainFrame;
+        this.gameAPI = gameAPI; 
         setLayout(null);
         setOpaque(false);
         setPreferredSize(new Dimension(1280, 720));
@@ -42,8 +45,11 @@ public class DialogueBoxLayer extends JPanel {
         disableTextHighlighting();
     }
     
+    // ── Speed Up Methods ──────────────────────────────────────────────────────
+    
     private void styleSpeedButton() {
         if (speedBtn != null) {
+            speedBtn.setText(">>");
             speedBtn.setFont(new Font("Arial", Font.BOLD, 20));
             speedBtn.setForeground(new Color(80, 80, 100));
             speedBtn.setBackground(new Color(0, 0, 0, 0));
@@ -121,7 +127,7 @@ public class DialogueBoxLayer extends JPanel {
         }
         isSpeedActive = false;
         if (speedBtn != null) {
-            speedBtn.setText("▶▶");
+            speedBtn.setText(">>");
             speedBtn.setForeground(new Color(80, 80, 100)); 
         }
     }
@@ -234,10 +240,7 @@ public class DialogueBoxLayer extends JPanel {
     }
 
     public String formatDialogue(String text) {
-        if (gameAPI == null) {
-            return text;
-        }
-        
+        if (gameAPI == null) { return text; }
         try {
             String playerName = gameAPI.getPlayerName();
             String playerGender = gameAPI.getPlayerGender();
