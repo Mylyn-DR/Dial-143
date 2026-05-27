@@ -1,0 +1,68 @@
+package GUI.panels;
+ 
+import GUI.panels.universalComponents.BackgroundLayer;
+import GUI.panels.titleScreenComponents.*;
+import javax.swing.*;
+import java.awt.*;
+import Entities.AudioPlayer;
+import Main.GameAPI;
+ 
+public class TitleScreenPanel extends JPanel {
+ 
+    private MainFrame             mainPanel;
+    private GameAPI               gameAPI;
+    private BackgroundLayer       bg;
+    private TitleScreenComponents buttons;
+ 
+    public TitleScreenPanel(MainFrame mainPanel, GameAPI gameAPI) {
+        this.mainPanel = mainPanel;
+        this.gameAPI = gameAPI; 
+        AudioPlayer.getInstance().play(AudioPlayer.Track.INTRO);
+        initComponents();
+        initializeLayers();
+    }
+ 
+    private void initializeLayers() {
+        bg = new BackgroundLayer();
+        bg.setBackgroundFromFile("game title bg.png");
+ 
+        buttons = new TitleScreenComponents();
+        buttons.setTitleImage("gameTitle.png");
+        buttons.setButtonImage("btn.png");
+ 
+        buttons.setPlayAction(() -> {
+            gameAPI.resetStats();
+            mainPanel.showScreen("dialogue");
+        });
+ 
+        buttons.setSaveAction(() -> {
+            if (mainPanel.getSavePanel() != null) {
+                mainPanel.showSave("title");
+            }
+        });
+ 
+        buttons.setCreditsAction(() -> {
+            if (mainPanel.getCreditsPanel() != null) {
+                mainPanel.getCreditsPanel().showAsPopup();
+            }
+        });
+        
+        buttons.setExitAction(() -> System.exit(0));
+ 
+        add(buttons);
+        add(bg);
+    }
+     // BELOW IS THE CODE GENERATURED FROM NETBEANS
+   
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setLayout(new javax.swing.OverlayLayout(this));
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // End of variables declaration//GEN-END:variables
+}

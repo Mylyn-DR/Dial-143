@@ -1,0 +1,22 @@
+{
+  "playerName": "asdsad",
+  "playerGender": "MALE",
+  "playerPronoun": "he/him",
+  "pp": 0,
+  "salary": 0,
+  "currentDay": 2,
+  "callsCompletedToday": 0,
+  "dialogueScene": 0,
+  "dialogueDone": false,
+  "subSceneIndex": -1,
+  "choiceID": "null",
+  "currentSegment": "MORNING",
+  "lpAmaya": 5,
+  "lpRosario": 16,
+  "lpCloma": 5,
+  "lpCeleres": 0,
+  "inventory": {},
+  "endingType": "NEUTRAL",
+  "ppAtShiftStart": 0,
+  "salaryAtShiftStart": 0
+}
